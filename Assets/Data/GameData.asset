@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 3699467972190431003, guid: 2a6226d0cc41345c2aac66a304cb6bd6, type: 3}
   playerThrust: 6.74
-  playerTorque: 0.519
+  playerTorque: 3.31
   screenPadding: 10
   rock: {fileID: 0}
   enemy: {fileID: 0}

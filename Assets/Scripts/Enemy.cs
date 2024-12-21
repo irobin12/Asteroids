@@ -1,7 +1,2 @@
-public class Enemy: Entity
-{
-    public override void OnUpdate()
-    {
-        
-    }
-}
+public class Enemy: MovingEntity
+{ }

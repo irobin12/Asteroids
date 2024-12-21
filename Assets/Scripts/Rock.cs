@@ -1,7 +1,2 @@
-public class Rock: Entity
-{
-    public override void OnUpdate()
-    {
-        
-    }
-}
+public class Rock: MovingEntity
+{ }

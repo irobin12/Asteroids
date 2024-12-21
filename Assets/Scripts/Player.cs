@@ -1,77 +1,50 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class Player: Entity
+[RequireComponent(typeof(ProjectileSpawner))]
+public class Player: MovingEntity
 {
-    private Rigidbody2D rigidbody2D;
-    private float thrust;
-    private float torque;
-    private GameManager.ScreenData screenData;
+    private ProjectileSpawner projectileSpawner;
 
-    private Vector2 worldMinCorner;
-    private Vector2 worldMaxCorner;
-    
-    public void Initialise(float thrust, float torque, GameManager.ScreenData screenData)
+    private bool upKeyPressed;
+    private bool leftKeyPressed;
+    private bool rightKeyPressed;
+    private bool ctrlKeyPressed;
+
+    public override void Initialise(float thrust, float torque)
     {
-        this.thrust = thrust;
-        this.torque = torque;
-        this.screenData = screenData;
+        base.Initialise(thrust, torque);
 
-        var minCorner = this.screenData.MainCamera.ScreenToWorldPoint(new Vector3(0, 0, 0));
-        var maxCorner = this.screenData.MainCamera.ScreenToWorldPoint(new Vector3(screenData.ScreenSize.x, screenData.ScreenSize.y, 0));
-        worldMinCorner = new Vector2(minCorner.x, minCorner.y);
-        worldMaxCorner = new Vector2(maxCorner.x, maxCorner.y);
+        projectileSpawner = GetComponent<ProjectileSpawner>();
+        projectileSpawner.Initialise();
         
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        
-        InputManager.UpKeyPressed += MoveForward;
-        InputManager.LeftKeyPressed += TurnLeft;
-        InputManager.RightKeyPressed += TurnRight;
+        InputManager.UpKeyPressed += () => upKeyPressed = true;
+        InputManager.LeftKeyPressed += () => leftKeyPressed = true;
+        InputManager.RightKeyPressed += () => rightKeyPressed = true;
+        InputManager.CtrlKeyPressed += () => ctrlKeyPressed = true;
     }
 
-    private void MoveForward()
+    protected override void FixedUpdate()
     {
-        rigidbody2D.AddRelativeForce(Vector2.up * thrust);
+        base.FixedUpdate();
+        HandleInput();
     }
 
-    private void CrossOverScreenBoundaries()
+    private void HandleInput()
     {
-        if (transform.position.x > worldMaxCorner.x)
-        {
-            transform.position = new Vector2(worldMinCorner.x, transform.position.y);
-        }
-        else if (transform.position.x < worldMinCorner.x)
-        {
-            transform.position = new Vector2(worldMaxCorner.x, transform.position.y);
-        }
+        SetMovement(upKeyPressed, leftKeyPressed, rightKeyPressed);
+        upKeyPressed = false;
+        leftKeyPressed = false;
+        rightKeyPressed = false;
 
-        if (transform.position.y > worldMaxCorner.y)
+        if (ctrlKeyPressed)
         {
-            transform.position = new Vector2(transform.position.x, worldMinCorner.y);
-        }
-        else if (transform.position.y < worldMinCorner.y)
-        {
-            transform.position = new Vector2(transform.position.x, worldMaxCorner.y);
+            Fire();
+            ctrlKeyPressed = false;
         }
     }
 
-    private void TurnLeft()
+    private void Fire()
     {
-        Rotate(torque);
-    }
-
-    private void TurnRight()
-    {
-        Rotate(-torque);
-    }
-
-    private void Rotate(float torque)
-    {
-        transform.Rotate(transform.forward * torque);
-    }
-
-    public override void OnUpdate()
-    {
-        CrossOverScreenBoundaries();
+        projectileSpawner.SpawnProjectile();
     }
 }

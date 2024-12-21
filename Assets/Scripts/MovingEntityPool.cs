@@ -1,22 +1,19 @@
+using Data;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class MovingEntityPool
 {
-    private readonly float entitiesThrust;
-    private readonly float entitiesTorque;
+    private readonly MovingEntityData entityData;
     
     private readonly Transform parent;
-    private readonly MovingEntity prefab;
     private readonly ObjectPool<MovingEntity> pool;
     
-    public MovingEntityPool(MovingEntity prefab, float entitiesThrust, float entitiesTorque = 0f, int defaultSize = 5, int maxSize = 20)
+    public MovingEntityPool(MovingEntityData movingEntityData, int defaultSize = 5, int maxSize = 20)
     {
-        this.entitiesThrust = entitiesThrust;
-        this.entitiesTorque = entitiesTorque;
-        this.prefab = prefab;
+        entityData = movingEntityData;
         
-        parent = new GameObject($"{prefab.name}Pool").transform;
+        parent = new GameObject($"{entityData.prefab.name}Pool").transform;
         
         pool = new ObjectPool<MovingEntity>(
             CreatePooledObject,
@@ -31,8 +28,8 @@ public class MovingEntityPool
     
     private MovingEntity CreatePooledObject()
     {
-        var movingEntity = Object.Instantiate(prefab, parent);
-        movingEntity.Initialise(entitiesThrust, entitiesTorque);
+        var movingEntity = Object.Instantiate(entityData.prefab, parent);
+        movingEntity.Initialise(entityData);
         return movingEntity;
     }
     

@@ -1,3 +1,4 @@
+using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(ProjectileSpawner))]
@@ -10,12 +11,12 @@ public class Player: MovingEntity
     private bool rightKeyPressed;
     private bool ctrlKeyPressed;
 
-    public override void Initialise(float thrust, float torque)
+    public void Initialise(PlayerData playerData, ProjectileData projectileData)
     {
-        base.Initialise(thrust, torque);
+        base.Initialise(playerData);
 
         projectileSpawner = GetComponent<ProjectileSpawner>();
-        projectileSpawner.Initialise();
+        projectileSpawner.Initialise(projectileData);
         
         InputManager.UpKeyPressed += () => upKeyPressed = true;
         InputManager.LeftKeyPressed += () => leftKeyPressed = true;

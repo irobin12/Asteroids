@@ -1,3 +1,4 @@
+using Data;
 using UnityEngine;
 
 public class ProjectileSpawner : MonoBehaviour
@@ -5,21 +6,20 @@ public class ProjectileSpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Projectile projectilePrefab;
     
-    [SerializeField] private float projectileThrust = 5f;
-    [SerializeField] private float projectileLifetime = 2f;
-    
+    private ProjectileData projectileData;
     private MovingEntityPool pool;
 
-    public void Initialise()
+    public void Initialise(ProjectileData data)
     {
-        pool = new MovingEntityPool(projectilePrefab, projectileThrust, 10, 50);
+        projectileData = data;
+        pool = new MovingEntityPool(projectileData, 10, 50);
     }
 
     public void SpawnProjectile()
     {
         var projectile = pool.GetEntity(spawnPoint).GetComponent<Projectile>();
         projectile.Death += ReleaseProjectile;
-        projectile.SetUp(projectileLifetime, true);
+        projectile.SetUp(projectileData.lifetime, true);
     }
 
     private void ReleaseProjectile(Projectile projectile)

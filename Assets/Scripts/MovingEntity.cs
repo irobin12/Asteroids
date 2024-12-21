@@ -1,3 +1,4 @@
+using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(RigidBodyMovementManager))]
@@ -10,10 +11,10 @@ public abstract class MovingEntity: MonoBehaviour
     /// </summary>
     /// <param name="thrust">Intensity of the force applied to the entity to move forward.</param>
     /// <param name="torque">Optional. Intensity of the force applied to the entity to rotate left or right.</param>
-    public virtual void Initialise(float thrust, float torque = 0f)
+    public virtual void Initialise(MovingEntityData movingEntityData)
     {
         MovementManager = GetComponent<RigidBodyMovementManager>();
-        MovementManager.Initialise(thrust, torque);
+        MovementManager.Initialise(movingEntityData);
     }
 
     protected virtual void FixedUpdate()

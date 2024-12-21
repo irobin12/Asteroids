@@ -1,3 +1,4 @@
+using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,10 +12,10 @@ public class RigidBodyMovementManager: MonoBehaviour
     private bool canMoveLeft;
     private bool canMoveRight;
 
-    public void Initialise(float thrust, float torque)
+    public void Initialise(MovingEntityData data)
     {
-        this.thrust = thrust;
-        this.torque = torque;
+        this.thrust = data.thrust;
+        this.torque = data.torque;
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 

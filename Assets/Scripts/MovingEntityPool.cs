@@ -33,17 +33,11 @@ public class MovingEntityPool
         return movingEntity;
     }
     
-    public MovingEntity GetEntity(Transform spawnPoint)
+    public MovingEntity GetEntity(Vector3 position, Quaternion rotation)
     {
         MovingEntity movingEntity = pool.Get();
-        movingEntity.transform.position = spawnPoint.position;
-        movingEntity.transform.rotation = spawnPoint.rotation;
-        
-        if(movingEntity.TryGetComponent (out Rigidbody2D rigidbody))
-        {
-            rigidbody.velocity = Vector2.zero;
-            rigidbody.angularVelocity = 0f;
-        }
+        movingEntity.transform.position = position;
+        movingEntity.transform.rotation = rotation;
         
         return movingEntity;
     }

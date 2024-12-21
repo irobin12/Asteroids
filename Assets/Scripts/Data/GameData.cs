@@ -6,10 +6,9 @@ namespace Data
     public class GameData : ScriptableObject
     {
         public PlayerData player;
-    
-        [Space]
-        public Rock rock;
+        public RockData rock;
         public Enemy enemy;
-                
+
+        public LevelData[] levels;
     }
 }

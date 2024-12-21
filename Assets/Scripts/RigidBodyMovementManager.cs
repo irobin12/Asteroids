@@ -14,8 +14,8 @@ public class RigidBodyMovementManager: MonoBehaviour
 
     public void Initialize(MovingEntityData data)
     {
-        this.thrust = data.thrust;
-        this.torque = data.torque;
+        thrust = data.thrust;
+        torque = data.torque;
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
@@ -54,7 +54,7 @@ public class RigidBodyMovementManager: MonoBehaviour
 
     private void MoveForward()
     {
-        rigidbody2D.AddRelativeForce(Vector2.up * thrust);
+        rigidbody2D.AddForce(transform.up * thrust, ForceMode2D.Force);
     }
 
     private void TurnLeft()

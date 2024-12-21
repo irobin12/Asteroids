@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class MovingEntity: MonoBehaviour
 {
     public Action<MovingEntity> Death;
-    
     private RigidBodyMovementManager movementManager;
     
     public void Initialize(MovingEntityData movingEntityData)
@@ -25,7 +24,7 @@ public abstract class MovingEntity: MonoBehaviour
         movementManager.Update();
     }
 
-    protected void SetMovement(bool forward, bool left, bool right)
+    public void SetMovement(bool forward, bool left, bool right)
     {
         movementManager.SetMovement(forward, left, right);
     }

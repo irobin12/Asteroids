@@ -8,7 +8,7 @@ public class Projectile: MovingEntity
     private float lifetime;
     private float timeSinceSpawned;
     
-    public void SetUp(float projectileLifetime, bool forward)
+    public void Initialize(float projectileLifetime, bool forward)
     {
         lifetime = projectileLifetime;
         SetMovement(forward, false, false);

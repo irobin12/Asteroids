@@ -12,7 +12,7 @@ public class RigidBodyMovementManager: MonoBehaviour
     private bool canMoveLeft;
     private bool canMoveRight;
 
-    public void Initialise(MovingEntityData data)
+    public void Initialize(MovingEntityData data)
     {
         this.thrust = data.thrust;
         this.torque = data.torque;

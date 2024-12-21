@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Data
 {
@@ -11,5 +10,6 @@ namespace Data
         [Space]
         public Rock rock;
         public Enemy enemy;
+                
     }
 }

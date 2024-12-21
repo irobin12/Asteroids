@@ -6,25 +6,35 @@ public class ProjectileSpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Projectile projectilePrefab;
     
-    private ProjectileData projectileData;
+    private ProjectileData data;
     private MovingEntityPool pool;
+    private float timeSinceLastSpawn;
 
-    public void Initialise(ProjectileData data)
+    public void Initialize(ProjectileData projectileData)
     {
-        projectileData = data;
+        data = projectileData;
         pool = new MovingEntityPool(projectileData, 10, 50);
     }
 
     public void SpawnProjectile()
     {
+        if (timeSinceLastSpawn < data.cooldown) return;
+        
         var projectile = pool.GetEntity(spawnPoint).GetComponent<Projectile>();
         projectile.Death += ReleaseProjectile;
-        projectile.SetUp(projectileData.lifetime, true);
+        projectile.SetUp(data.lifetime, true);
+        
+        timeSinceLastSpawn = 0;
     }
 
     private void ReleaseProjectile(Projectile projectile)
     {
         projectile.Death -= ReleaseProjectile;
         pool.ReleaseEntity(projectile);
+    }
+
+    private void Update()
+    {
+        timeSinceLastSpawn += Time.deltaTime;
     }
 }

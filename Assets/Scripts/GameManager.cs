@@ -12,6 +12,7 @@ public class GameManager: MonoBehaviour
     private void Awake()
     {
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
+        InputManager.Initialize(gameData.player);
     }
 
     private void Start()
@@ -20,7 +21,7 @@ public class GameManager: MonoBehaviour
         
         if (playerInstance.TryGetComponent(out player))
         {
-            player.Initialise(gameData.player, gameData.player.projectileData);
+            player.Initialize(gameData.player, gameData.player.projectileData);
         }
         else
         {

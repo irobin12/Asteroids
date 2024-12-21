@@ -11,17 +11,47 @@ public class Player: MovingEntity
     private bool rightKeyPressed;
     private bool ctrlKeyPressed;
 
-    public void Initialise(PlayerData playerData, ProjectileData projectileData)
+    private bool lockFire;
+
+    public void Initialize(PlayerData playerData, ProjectileData projectileData)
     {
-        base.Initialise(playerData);
+        base.Initialize(playerData);
+        lockFire = playerData.lockFire;
 
         projectileSpawner = GetComponent<ProjectileSpawner>();
-        projectileSpawner.Initialise(projectileData);
+        projectileSpawner.Initialize(projectileData);
         
-        InputManager.UpKeyPressed += () => upKeyPressed = true;
-        InputManager.LeftKeyPressed += () => leftKeyPressed = true;
-        InputManager.RightKeyPressed += () => rightKeyPressed = true;
-        InputManager.CtrlKeyPressed += () => ctrlKeyPressed = true;
+        InputManager.UpKeyPressed += OnUpKeyPressed;
+        InputManager.LeftKeyPressed += OnLeftKeyPressed;
+        InputManager.RightKeyPressed += OnRightKeyPressed;
+        InputManager.CtrlKeyPressed += OnCtrlKeyPressed;
+    }
+
+    private void OnUpKeyPressed()
+    {
+        upKeyPressed = true;
+    }
+
+    private void OnLeftKeyPressed()
+    {
+        leftKeyPressed = true;
+    }
+
+    private void OnRightKeyPressed()
+    {
+        rightKeyPressed = true;
+    }
+
+    private void OnCtrlKeyPressed()
+    {
+        if (lockFire)
+        {
+            ctrlKeyPressed = !ctrlKeyPressed;
+        }
+        else
+        {
+            ctrlKeyPressed = true;
+        }
     }
 
     protected override void FixedUpdate()
@@ -42,12 +72,23 @@ public class Player: MovingEntity
         if (ctrlKeyPressed)
         {
             Fire();
-            ctrlKeyPressed = false;
+            if (!lockFire)
+            {
+                ctrlKeyPressed = false;
+            }
         }
     }
 
     private void Fire()
     {
         projectileSpawner.SpawnProjectile();
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.UpKeyPressed -= OnUpKeyPressed;
+        InputManager.LeftKeyPressed -= OnLeftKeyPressed;
+        InputManager.RightKeyPressed -= OnRightKeyPressed;
+        InputManager.CtrlKeyPressed -= OnCtrlKeyPressed;
     }
 }

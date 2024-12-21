@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac018d3363484180988f22f1c7ca98c, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3699467972190431003, guid: 2a6226d0cc41345c2aac66a304cb6bd6, type: 3}
+  playerThrust: 6.74
+  playerTorque: 0.519
+  screenPadding: 10
+  rock: {fileID: 0}
+  enemy: {fileID: 0}

@@ -1,9 +1,12 @@
+using System;
 using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(RigidBodyMovementManager))]
 public abstract class MovingEntity: MonoBehaviour
 {
+    public Action<MovingEntity> Death;
+    
     private RigidBodyMovementManager movementManager;
     
     public void Initialize(MovingEntityData movingEntityData)
@@ -28,4 +31,9 @@ public abstract class MovingEntity: MonoBehaviour
     }
 
     public abstract void Reset();
+
+    protected void Die()
+    {
+        Death.Invoke(this);
+    }
 }

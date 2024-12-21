@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f9d5f0ba4c45f4a7875a8f3309e144, type: 3}
   m_Name: PlayerProjectileData
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  thrust: 10
-  torque: 5
-  projectileThrust: 5
-  projectileLifetime: 0.5
-  projectileCooldown: 0.5
+  prefab: {fileID: 6773279978713301482, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+  thrust: 5
+  torque: 0
+  lifetime: 0.5
+  cooldown: 0.2

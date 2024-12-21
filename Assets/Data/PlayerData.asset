@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f436ac369bf34a83810dbea71898e462, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  thrust: 10
+  prefab: {fileID: 3699467972190431003, guid: 2a6226d0cc41345c2aac66a304cb6bd6, type: 3}
+  thrust: 15
   torque: 5
-  projectileData: {fileID: 0}
+  projectileData: {fileID: 11400000, guid: b3aa98d6703de4ca6ba2172cb512ed54, type: 2}
+  continuousFire: 1
+  lockFire: 0

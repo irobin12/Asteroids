@@ -4,8 +4,6 @@ using UnityEngine.Pool;
 
 public class Projectile: MovingEntity
 {
-    public Action<Projectile> Death;
-    
     private ObjectPool<Projectile> pool;
     private float lifetime;
     private float timeSinceSpawned;
@@ -31,7 +29,7 @@ public class Projectile: MovingEntity
         }
         else
         {
-            Death.Invoke(this);
+            Die();
         }
     }
 }

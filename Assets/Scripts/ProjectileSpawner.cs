@@ -27,7 +27,7 @@ public class ProjectileSpawner : MonoBehaviour
         timeSinceLastSpawn = 0;
     }
 
-    private void ReleaseProjectile(Projectile projectile)
+    private void ReleaseProjectile(MovingEntity projectile)
     {
         projectile.Death -= ReleaseProjectile;
         pool.ReleaseEntity(projectile);

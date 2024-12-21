@@ -5,10 +5,10 @@ public class GameData : ScriptableObject
 {
     [Header("Player data")]
     public Player playerPrefab;
-    [Range(0f, 10f)] 
-    public float playerThrust = 1f;
-    [Range(0f, 10f)] 
-    public float playerTorque = 0.05f;
+    [Range(0f, 20f)] 
+    public float playerThrust = 10f;
+    [Range(0f, 20f)] 
+    public float playerTorque = 5f;
     
     [Space]
     public Rock rock;

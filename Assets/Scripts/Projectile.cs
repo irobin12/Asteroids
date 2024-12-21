@@ -16,7 +16,7 @@ public class Projectile: MovingEntity
         SetMovement(forward, false, false);
     }
 
-    public void Reset()
+    public override void Reset()
     {
         timeSinceSpawned = 0f;
     }

@@ -29,6 +29,8 @@ public class Player: MovingEntity
         HandleInput();
     }
 
+    public override void Reset() { }
+
     private void HandleInput()
     {
         SetMovement(upKeyPressed, leftKeyPressed, rightKeyPressed);

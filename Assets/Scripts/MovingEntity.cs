@@ -26,8 +26,10 @@ public abstract class MovingEntity: MonoBehaviour
         MovementManager.Update();
     }
 
-    public void SetMovement(bool forward, bool left, bool right)
+    protected void SetMovement(bool forward, bool left, bool right)
     {
         MovementManager.SetMovement(forward, left, right);
     }
+
+    public abstract void Reset();
 }

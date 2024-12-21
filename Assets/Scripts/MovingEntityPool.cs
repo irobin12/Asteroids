@@ -6,14 +6,17 @@ public class MovingEntityPool
     private readonly float entitiesThrust;
     private readonly float entitiesTorque;
     
+    private readonly Transform parent;
     private readonly MovingEntity prefab;
     private readonly ObjectPool<MovingEntity> pool;
-
+    
     public MovingEntityPool(MovingEntity prefab, float entitiesThrust, float entitiesTorque = 0f, int defaultSize = 5, int maxSize = 20)
     {
         this.entitiesThrust = entitiesThrust;
         this.entitiesTorque = entitiesTorque;
         this.prefab = prefab;
+        
+        parent = new GameObject($"{prefab.name}Pool").transform;
         
         pool = new ObjectPool<MovingEntity>(
             CreatePooledObject,
@@ -28,7 +31,7 @@ public class MovingEntityPool
     
     private MovingEntity CreatePooledObject()
     {
-        var movingEntity = Object.Instantiate(prefab);
+        var movingEntity = Object.Instantiate(prefab, parent);
         movingEntity.Initialise(entitiesThrust, entitiesTorque);
         return movingEntity;
     }
@@ -53,18 +56,19 @@ public class MovingEntityPool
         pool.Release(movingEntity);
     }
 
-    private void OnGetFromPool(MovingEntity pooledObject)
+    private void OnGetFromPool(MovingEntity movingEntity)
     {
-        pooledObject.gameObject.SetActive(true);
+        movingEntity.gameObject.SetActive(true);
     }
 
-    private void OnReleaseToPool(MovingEntity pooledObject)
+    private void OnReleaseToPool(MovingEntity movingEntity)
     {
-        pooledObject.gameObject.SetActive(false);
+        movingEntity.gameObject.SetActive(false);
+        movingEntity.Reset();
     }
 
-    private void OnDestroyPooledObject(MovingEntity pooledObject)
+    private void OnDestroyPooledObject(MovingEntity movingEntity)
     {
-        Object.Destroy(pooledObject);
+        Object.Destroy(movingEntity);
     }
 }

@@ -9,7 +9,7 @@ public class RockSpawner : MonoBehaviour
     private MovingEntityPool pool;
     // private int rocksToSpawn;
 
-    public void Initialize(RockData rockData)
+    public void SetUp(RockData rockData)
     {
         data = rockData;
         pool = new MovingEntityPool(data, 5, 50);
@@ -52,7 +52,7 @@ public class RockSpawner : MonoBehaviour
     {
         var rock = pool.GetEntity(position, rotation).GetComponent<Rock>();
         rock.Death += ReleaseRock;
-        rock.Initialize(true);
+        rock.SetUp(true);
     }
 
     private void ReleaseRock(MovingEntity projectile)

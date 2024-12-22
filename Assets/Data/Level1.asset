@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e763e541b0414b8b071a2f11dc00f8, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  startingRocksToSpawn: 0
+  startingRocksToSpawn: 3

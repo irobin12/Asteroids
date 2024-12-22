@@ -29,7 +29,7 @@ public class MovingEntityPool
     private MovingEntity CreatePooledObject()
     {
         var movingEntity = Object.Instantiate(entityData.prefab, parent);
-        movingEntity.Initialize(entityData);
+        movingEntity.SetUp(entityData);
         return movingEntity;
     }
     

@@ -10,7 +10,7 @@ public class ProjectileSpawner : MonoBehaviour
     private MovingEntityPool pool;
     private float timeSinceLastSpawn;
 
-    public void Initialize(ProjectileData projectileData)
+    public void SetUp(ProjectileData projectileData)
     {
         data = projectileData;
         pool = new MovingEntityPool(projectileData, 5, 15);
@@ -22,7 +22,7 @@ public class ProjectileSpawner : MonoBehaviour
         
         var projectile = pool.GetEntity(spawnPoint.position, spawnPoint.rotation).GetComponent<Projectile>();
         projectile.Death += ReleaseProjectile;
-        projectile.Initialize(data.lifetime, true);
+        projectile.SetUp(data.lifetime, true);
         
         timeSinceLastSpawn = 0;
     }

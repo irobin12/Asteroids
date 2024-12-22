@@ -2,16 +2,19 @@ using System;
 using Data;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(RigidBodyMovementManager))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public abstract class MovingEntity: MonoBehaviour
 {
     public Action<MovingEntity> Death;
     private RigidBodyMovementManager movementManager;
     
-    public void Initialize(MovingEntityData movingEntityData)
+    public void SetUp(MovingEntityData movingEntityData)
     {
-        movementManager = GetComponent<RigidBodyMovementManager>();
-        movementManager.Initialize(movingEntityData);
+        if (!TryGetComponent(out movementManager))
+        {
+            movementManager = gameObject.AddComponent<RigidBodyMovementManager>();
+        }
+        movementManager.SetUp(movingEntityData);
     }
 
     protected virtual void FixedUpdate()
@@ -24,15 +27,19 @@ public abstract class MovingEntity: MonoBehaviour
         movementManager.Update();
     }
 
-    public void SetMovement(bool forward, bool left, bool right)
+    public virtual void Reset()
+    {
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+    }
+    
+    protected void SetMovement(bool forward, bool left, bool right)
     {
         movementManager.SetMovement(forward, left, right);
     }
 
-    public abstract void Reset();
-
-    protected void Die()
+    protected virtual void Die()
     {
-        Death.Invoke(this);
+        Death?.Invoke(this);
     }
 }

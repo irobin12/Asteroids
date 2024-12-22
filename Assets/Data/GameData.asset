@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   player: {fileID: 11400000, guid: 1de387e375f56408f987f2d4ab0404cf, type: 2}
-  rock: {fileID: 0}
+  rock: {fileID: 11400000, guid: dddd6704ae99e4957bf82b3e1432e974, type: 2}
   enemy: {fileID: 0}
+  startingHealth: 3
+  maxHealth: 5
+  scorePerBonusLife: 0
+  respawnTime: 2
+  levels:
+  - {fileID: 11400000, guid: 1e1c859187b0e410a9f79bd170fb0366, type: 2}

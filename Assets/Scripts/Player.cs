@@ -1,4 +1,5 @@
 using Data;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(ProjectileSpawner))]
@@ -13,13 +14,13 @@ public class Player: MovingEntity
 
     private bool lockFire;
 
-    public void Initialize(PlayerData playerData, ProjectileData projectileData)
+    public void SetUp(PlayerData playerData, ProjectileData projectileData)
     {
-        base.Initialize(playerData);
+        base.SetUp(playerData);
         lockFire = playerData.lockFire;
 
         projectileSpawner = GetComponent<ProjectileSpawner>();
-        projectileSpawner.Initialize(projectileData);
+        projectileSpawner.SetUp(projectileData);
         
         InputManager.UpKeyPressed += OnUpKeyPressed;
         InputManager.LeftKeyPressed += OnLeftKeyPressed;
@@ -60,8 +61,6 @@ public class Player: MovingEntity
         HandleInput();
     }
 
-    public override void Reset() { }
-
     private void HandleInput()
     {
         SetMovement(upKeyPressed, leftKeyPressed, rightKeyPressed);
@@ -90,5 +89,16 @@ public class Player: MovingEntity
         InputManager.LeftKeyPressed -= OnLeftKeyPressed;
         InputManager.RightKeyPressed -= OnRightKeyPressed;
         InputManager.CtrlKeyPressed -= OnCtrlKeyPressed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Die();
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+        gameObject.SetActive(false);
     }
 }

@@ -1,6 +1,6 @@
 public class Rock: MovingEntity
 {
-    public void Initialize(bool forward)
+    public void SetUp(bool forward)
     {
         SetMovement(forward, false, false);
     }

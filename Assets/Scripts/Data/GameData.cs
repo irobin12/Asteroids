@@ -9,6 +9,15 @@ namespace Data
         public RockData rock;
         public Enemy enemy;
 
+        [Tooltip("The number of lives the player starts the game with.")]
+        public int startingHealth;
+        [Tooltip("The maximum number of lives the player can accumulate.")]
+        public int maxHealth;
+        [Tooltip("The additional score required to gain a life.")]
+        public int scorePerBonusLife;
+        [Tooltip("Player respawn countdown time in seconds.")]
+        public float respawnTime;
+        
         public LevelData[] levels;
     }
 }

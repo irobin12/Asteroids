@@ -12,7 +12,7 @@ public static class InputManager
     
     private static PlayerData playerData;
 
-    public static void Initialize(PlayerData playerData)
+    public static void SetUp(PlayerData playerData)
     {
         InputManager.playerData = playerData;
     }

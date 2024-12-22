@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b9bd6238864236ad4e300c7dc9e06c, type: 3}
   m_Name: RockData
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  thrust: 10
+  prefab: {fileID: 1615962829292360016, guid: aa4629b9c077f4f4aba88b9d1907b390, type: 3}
+  thrust: 19.96
   torque: 5
+  spawnedRock: {fileID: 0}

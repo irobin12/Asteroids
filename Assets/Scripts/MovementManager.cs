@@ -2,7 +2,7 @@ using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class RigidBodyMovementManager: MonoBehaviour
+public class MovementManager: MonoBehaviour
 {
     private new Rigidbody2D rigidbody2D;
     private float thrust;
@@ -12,7 +12,7 @@ public class RigidBodyMovementManager: MonoBehaviour
     private bool canMoveLeft;
     private bool canMoveRight;
 
-    public void SetUp(MovingEntityData data)
+    public void SetUp(EntityData data)
     {
         thrust = data.thrust;
         torque = data.torque;

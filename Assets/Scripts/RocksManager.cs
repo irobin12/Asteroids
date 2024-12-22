@@ -21,8 +21,8 @@ public class RocksManager: MonoBehaviour
     
     private void CreateRocks()
     {
-        rockSpawner.SetUp(levelData.startingRockData);
-        rockSpawner.SpawnFirstRocks(levelData.startingRocksToSpawn);
+        rockSpawner.SetUp(levelData.startingRockData.prefab, 5, 50);
+        rockSpawner.SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
         rockSpawner.OnRockDestroyed += OnRockDestroyed;
     }
 

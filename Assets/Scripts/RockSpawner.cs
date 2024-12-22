@@ -1,70 +1,63 @@
 using System;
 using Data;
+using Entities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class RockSpawner : MonoBehaviour
+public class RockSpawner : EntitySpawner<Rock>
 {
     public Action<int> OnRockDestroyed;
-    
-    [SerializeField] private Projectile projectilePrefab;
-    
-    private RockData data;
-    private MovingEntityPool pool;
-    // private int rocksToSpawn;
 
-    public void SetUp(RockData rockData)
-    {
-        data = rockData;
-        pool = new MovingEntityPool(data, 5, 50);
-    }
-
-    public void SpawnFirstRocks(int rocksToSpawn)
+    public void SpawnFirstRocks(int rocksToSpawn, RockData rockData)
     {
         for (int i = 0; i < rocksToSpawn; i++)
         {
-            // Randomly pick between top, bottom, left or right border.
-            // The game being played in landscape, top and bottom should be weighted against left and right.
-            int randomBorder = Random.Range(0, 4);
-            
-            Vector3 randomPosition;                                                                                                                                       
-            
-            if (randomBorder is 0 or 1)
-            {
-                // Horizontal border (top or bottom)
-                var randomX = Random.Range(ScreenManager.WorldMinCorner.x, ScreenManager.WorldMaxCorner.x);
-                var randomY = randomBorder == 0 ? ScreenManager.WorldMinCorner.y : ScreenManager.WorldMaxCorner.y;
-                randomPosition = new Vector3(randomX, randomY, 0);
-            }
-            else
-            {
-                // Vertical border (left or right)
-                var randomY = Random.Range(ScreenManager.WorldMinCorner.y, ScreenManager.WorldMaxCorner.y);
-                var randomX = randomBorder == 2 ? ScreenManager.WorldMinCorner.x : ScreenManager.WorldMaxCorner.x;
-                randomPosition = new Vector3(randomX, randomY, 0);
-            }
-            
+            var randomPosition = CreateRandomPosition(Random.Range(0, 4));
             var randomRotation = Random.Range(0f, 360f);
             
-            SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation));
+            SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
         }
     }
-    
-    private void SpawnRock(Vector3 position, Quaternion rotation)
-    {
-        var rock = pool.GetEntity(position, rotation).GetComponent<Rock>();
-        rock.Death += ReleaseRock;
-        rock.SetUp(data,true);
-    }
 
-    private void ReleaseRock(MovingEntity entity)
+    /// <summary>
+    /// Randomly pick between top, bottom, left or right border.
+    /// The game being played in landscape, top and bottom should be weighted against left and right.
+    /// </summary>
+    /// <param name="border">0 = top, 1 = bottom, 2 = left, 3 = right</param>
+    /// <returns></returns>
+    private static Vector3 CreateRandomPosition(int border)
     {
-        if (entity is Rock rock)
+        Vector3 randomPosition;
+        if (border is 0 or 1)
         {
-            OnRockDestroyed?.Invoke(rock.Data.score);
+            // Horizontal border (top or bottom)
+            var randomX = Random.Range(ScreenManager.WorldMinCorner.x, ScreenManager.WorldMaxCorner.x);
+            var randomY = border == 1 ? ScreenManager.WorldMinCorner.y : ScreenManager.WorldMaxCorner.y;
+            randomPosition = new Vector3(randomX, randomY, 0);
         }
-        entity.Death -= ReleaseRock;
-        pool.ReleaseEntity(entity);
+        else
+        {
+            // Vertical border (left or right)
+            var randomY = Random.Range(ScreenManager.WorldMinCorner.y, ScreenManager.WorldMaxCorner.y);
+            var randomX = border == 2 ? ScreenManager.WorldMinCorner.x : ScreenManager.WorldMaxCorner.x;
+            randomPosition = new Vector3(randomX, randomY, 0);
+        }
+
+        return randomPosition;
     }
 
+    private void SpawnRock(Vector3 position, Quaternion rotation, RockData data)
+    {
+        var rock = Pool.GetObject(position, rotation);
+        rock.Destroyed += ReleaseRock;
+        rock.SetUp(data);
+    }
+
+    private void ReleaseRock(Rock rock)
+    {
+        OnRockDestroyed?.Invoke(rock.Data.score);
+    
+        rock.Destroyed -= ReleaseRock;
+        Pool.ReleaseGameObject(rock);
+    }
 }

@@ -1,36 +1,37 @@
 using Data;
+using Entities;
 using UnityEngine;
 
-public class ProjectileSpawner : MonoBehaviour
+public class ProjectileSpawner : EntitySpawner<Projectile>
 {
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Projectile projectilePrefab;
     
-    private ProjectileData data;
-    private MovingEntityPool pool;
+    private ProjectileData projectileData;
     private float timeSinceLastSpawn;
-
-    public void SetUp(ProjectileData projectileData)
+    
+    public void SetUp(ProjectileData data, int defaultSize = 5, int maxSize = 15)
     {
-        data = projectileData;
-        pool = new MovingEntityPool(projectileData, 5, 15);
+        projectileData = data;
+        base.SetUp(data.prefab, defaultSize, maxSize);
     }
 
     public void SpawnProjectile()
     {
-        if (timeSinceLastSpawn < data.cooldown) return;
-        
-        var projectile = pool.GetEntity(spawnPoint.position, spawnPoint.rotation).GetComponent<Projectile>();
-        projectile.Death += ReleaseProjectile;
-        projectile.SetUp(data.lifetime, true);
+        if (timeSinceLastSpawn < projectileData.cooldown) return;
+
+        var projectile = Pool.GetObject(spawnPoint.position, spawnPoint.rotation);
+        projectile.Destroyed += ReleaseProjectile;
+        projectile.SetUp(projectileData);
         
         timeSinceLastSpawn = 0;
     }
 
-    private void ReleaseProjectile(MovingEntity projectile)
+    private void ReleaseProjectile(Projectile projectile)
     {
-        projectile.Death -= ReleaseProjectile;
-        pool.ReleaseEntity(projectile);
+        projectile.Destroyed -= ReleaseProjectile;
+        projectile.Reset();
+        Pool.ReleaseGameObject(projectile);
     }
 
     private void Update()

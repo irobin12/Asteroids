@@ -94,8 +94,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7660630394374137401}
   - component: {fileID: 3699467972190431003}
-  - component: {fileID: 7902384198646325186}
   - component: {fileID: 5990212941879067228}
+  - component: {fileID: 7902384198646325186}
   - component: {fileID: 4055758173566905918}
   - component: {fileID: 6232206842436715590}
   m_Layer: 3
@@ -134,6 +134,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0abbbddc6dbc47e88d8cf9bafe0ef352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5990212941879067228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4396954057080560860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d9590141e0842a0a70af8c80aa82797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7902384198646325186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,18 +160,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 7373088939405925896}
   projectilePrefab: {fileID: 6773279978713301482, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
---- !u!114 &5990212941879067228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4396954057080560860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d9590141e0842a0a70af8c80aa82797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &4055758173566905918
 Rigidbody2D:
   serializedVersion: 4

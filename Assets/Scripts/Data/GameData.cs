@@ -6,6 +6,7 @@ namespace Data
     [CreateAssetMenu(fileName = "GameData", menuName = "Data/GameData", order = 1)]
     public class GameData : ScriptableObject
     {
+        public InputData inputData;
         public PlayerData player;
         public Enemy enemy;
 

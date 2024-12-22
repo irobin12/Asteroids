@@ -4,6 +4,7 @@ using Data;
 using Entities;
 using UnityEngine;
 
+
 public class GameManager: MonoBehaviour
 {
     [SerializeField] private GameData gameData;
@@ -30,7 +31,7 @@ public class GameManager: MonoBehaviour
         DataValidator.VerifyData(gameData);
 
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
-        InputManager.SetUp(gameData.player);
+        InputManager.SetUp(gameData.inputData);
 
         gameObject.TryAddComponent(out rocksManager);
         // rocksManager = TryAddComponent();

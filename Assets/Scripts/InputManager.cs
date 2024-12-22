@@ -1,49 +1,85 @@
 using System;
 using Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public static class InputManager
 {
-    public static Action UpKeyPressed;
-    public static Action LeftKeyPressed;
-    public static Action RightKeyPressed;
-    public static Action CtrlKeyPressed;
-    public static Action SpaceKeyPressed;
+    public static Action MoveForwardKeyPressed;
+    public static Action MoveLeftKeyPressed;
+    public static Action MoveRightKeyPressed;
+    public static Action ShootKeyPressed;
+    public static Action TeleportationKeyPressed;
     
-    private static PlayerData playerData;
-
-    public static void SetUp(PlayerData playerData)
+    public static InputData Data {get; private set;}
+    
+    public static void SetUp(InputData data)
     {
-        InputManager.playerData = playerData;
+        Data = data;
     }
     
     public static void Update()
     {
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+        foreach (KeyCode keyCode in Data.moveForwardKeys)
         {
-            UpKeyPressed?.Invoke();
+            if (Input.GetKey(keyCode))
+            {
+                MoveForwardKeyPressed?.Invoke();
+                break;
+            }
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        foreach (KeyCode keyCode in Data.moveLeftKeys)
         {
-            LeftKeyPressed?.Invoke();
+            if (Input.GetKey(keyCode))
+            {
+                MoveLeftKeyPressed?.Invoke();
+                break;
+            }
         }
 
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        foreach (KeyCode keyCode in Data.moveRightKeys)
         {
-            RightKeyPressed?.Invoke();
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)
-                || (playerData.continuousFire && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))))
-        {
-            CtrlKeyPressed?.Invoke();
+            if (Input.GetKey(keyCode))
+            {
+                MoveRightKeyPressed?.Invoke();
+                break;
+            }
         }
         
-        
-        if (Input.GetKeyDown(KeyCode.Space))
+        foreach (KeyCode keyCode in Data.shootKeys)
         {
-            SpaceKeyPressed?.Invoke();
+            if (Data.continuousFire)
+            {
+                if (Input.GetKey(keyCode))
+                {
+                    ShootKeyPressed?.Invoke();
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(keyCode))
+                {
+                    ShootKeyPressed?.Invoke();
+                }
+            }
+            
+            break;
+        }
+
+        // if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)
+        //         || (Data.continuousFire && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))))
+        // {
+        //     ShootKeyPressed?.Invoke();
+        // }
+
+        foreach (KeyCode keyCode in Data.teleportationKeys)
+        {
+            if (Input.GetKey(keyCode))
+            {
+                TeleportationKeyPressed?.Invoke();
+                break;
+            }
         }
     }
 }

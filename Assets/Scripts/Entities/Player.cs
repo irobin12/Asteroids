@@ -29,25 +29,25 @@ namespace Entities
             projectileSpawner = GetComponent<ProjectileSpawner>();
             projectileSpawner.SetUp(data.projectileData);
         
-            lockFire = data.lockFire;
+            lockFire = InputManager.Data.lockFire;
         
-            InputManager.UpKeyPressed += OnUpKeyPressed;
-            InputManager.LeftKeyPressed += OnLeftKeyPressed;
-            InputManager.RightKeyPressed += OnRightKeyPressed;
-            InputManager.CtrlKeyPressed += OnCtrlKeyPressed;
+            InputManager.MoveForwardKeyPressed += MoveForward;
+            InputManager.MoveLeftKeyPressed += MoveLeft;
+            InputManager.MoveRightKeyPressed += MoveRight;
+            InputManager.ShootKeyPressed += OnCtrlKeyPressed;
         }
 
-        private void OnUpKeyPressed()
+        private void MoveForward()
         {
             upKeyPressed = true;
         }
 
-        private void OnLeftKeyPressed()
+        private void MoveLeft()
         {
             leftKeyPressed = true;
         }
 
-        private void OnRightKeyPressed()
+        private void MoveRight()
         {
             rightKeyPressed = true;
         }
@@ -94,10 +94,10 @@ namespace Entities
 
         private void OnDestroy()
         {
-            InputManager.UpKeyPressed -= OnUpKeyPressed;
-            InputManager.LeftKeyPressed -= OnLeftKeyPressed;
-            InputManager.RightKeyPressed -= OnRightKeyPressed;
-            InputManager.CtrlKeyPressed -= OnCtrlKeyPressed;
+            InputManager.MoveForwardKeyPressed -= MoveForward;
+            InputManager.MoveLeftKeyPressed -= MoveLeft;
+            InputManager.MoveRightKeyPressed -= MoveRight;
+            InputManager.ShootKeyPressed -= OnCtrlKeyPressed;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

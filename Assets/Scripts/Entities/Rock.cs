@@ -16,7 +16,6 @@ namespace Entities
         {
             movementManager = GetComponent<MovementManager>();
             movementManager.SetUp(data);
-            // Destroyable = GetComponent<Destroyable>();
             Data = data;
             movementManager.SetMovement(true, false, false);
         }

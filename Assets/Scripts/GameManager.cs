@@ -13,6 +13,7 @@ public class GameManager: MonoBehaviour
     private Player player;
     private RockSpawner rockSpawner;
     private int currentHealth;
+    private int currentScore;
     
     /// <summary>
     /// int is the new health
@@ -104,7 +105,7 @@ public class GameManager: MonoBehaviour
     private IEnumerator RespawnPlayer()
     {
         player.Reset();
-        yield return new WaitForSeconds(gameData.respawnTime);
+        yield return new WaitForSeconds(gameData.player.respawnTime);
         player.gameObject.SetActive(true);
     }
 
@@ -112,6 +113,13 @@ public class GameManager: MonoBehaviour
     {
         rockSpawner.SetUp(gameData.rock);
         rockSpawner.SpawnFirstRocks(gameData.levels[0].startingRocksToSpawn);
+        rockSpawner.OnRockDestroyed += SetScore;
+    }
+
+    private void SetScore(int scoreAdded)
+    {
+        currentScore += scoreAdded;
+        ScoreChanged?.Invoke(currentScore);
     }
 
     private void Update()

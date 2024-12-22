@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4326502695572418577}
   - component: {fileID: 3811257734017037586}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5990212941879067228}
   - component: {fileID: 4055758173566905918}
   - component: {fileID: 6232206842436715590}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7373088939405925896}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: ProjectileSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

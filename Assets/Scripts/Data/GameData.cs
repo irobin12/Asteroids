@@ -15,8 +15,6 @@ namespace Data
         public int maxHealth;
         [Tooltip("The additional score required to gain a life.")]
         public int scorePerBonusLife;
-        [Tooltip("Player respawn countdown time in seconds.")]
-        public float respawnTime;
         
         public LevelData[] levels;
     }

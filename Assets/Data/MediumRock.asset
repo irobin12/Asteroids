@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f9d5f0ba4c45f4a7875a8f3309e144, type: 3}
-  m_Name: PlayerProjectileData
+  m_Script: {fileID: 11500000, guid: a1b9bd6238864236ad4e300c7dc9e06c, type: 3}
+  m_Name: MediumRock
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6773279978713301482, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
-  thrust: 5
-  torque: 0
-  lifetime: 0.5
-  cooldown: 0.2
+  prefab: {fileID: 1615962829292360016, guid: 3c290cf69e8c441288b026e198ba6f99, type: 3}
+  thrust: 19.96
+  torque: 5
+  spawnedRock: {fileID: 0}
+  score: 50

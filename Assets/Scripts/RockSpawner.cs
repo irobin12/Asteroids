@@ -1,8 +1,12 @@
+using System;
 using Data;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RockSpawner : MonoBehaviour
 {
+    public Action<int> OnRockDestroyed;
+    
     [SerializeField] private Projectile projectilePrefab;
     
     private RockData data;
@@ -17,8 +21,6 @@ public class RockSpawner : MonoBehaviour
 
     public void SpawnFirstRocks(int rocksToSpawn)
     {
-        // Random random = new Random();
-        
         for (int i = 0; i < rocksToSpawn; i++)
         {
             // Randomly pick between top, bottom, left or right border.
@@ -52,12 +54,17 @@ public class RockSpawner : MonoBehaviour
     {
         var rock = pool.GetEntity(position, rotation).GetComponent<Rock>();
         rock.Death += ReleaseRock;
-        rock.SetUp(true);
+        rock.SetUp(data,true);
     }
 
-    private void ReleaseRock(MovingEntity projectile)
+    private void ReleaseRock(MovingEntity entity)
     {
-        projectile.Death -= ReleaseRock;
-        pool.ReleaseEntity(projectile);
+        if (entity is Rock rock)
+        {
+            OnRockDestroyed?.Invoke(rock.Data.score);
+        }
+        entity.Death -= ReleaseRock;
+        pool.ReleaseEntity(entity);
     }
+
 }

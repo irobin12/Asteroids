@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8589634322417983538}
   - component: {fileID: 7260763435118388365}
   m_Layer: 0
-  m_Name: Rock
+  m_Name: BigRock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.8962264, g: 0.5279254, b: 0.2325116, a: 1}
+  m_Color: {r: 0.6037736, g: 0.31559068, b: 0.08259169, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

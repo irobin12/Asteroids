@@ -7,6 +7,8 @@ namespace Data
     public class PlayerData : MovingEntityData
     {
         public ProjectileData projectileData;
+        [Tooltip("Player respawn countdown time in seconds.")]
+        public float respawnTime = 2f;
         
         [Header("Accessibility")]
         [Tooltip("Can the projectile fire key be held down to shoot continuously?")]

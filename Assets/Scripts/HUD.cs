@@ -56,7 +56,7 @@ public class HUD: MonoBehaviour
 
     private void SetScore(int newScore)
     {
-        scoreText.text = newScore.ToString("D");
+        scoreText.text = newScore.ToString("N0");
     }
 
     private void OnHealthChanged(int newHealth)

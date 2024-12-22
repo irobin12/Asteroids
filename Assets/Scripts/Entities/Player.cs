@@ -12,10 +12,10 @@ namespace Entities
         private ProjectileSpawner projectileSpawner;
         private MovementManager movementManager;
 
-        private bool upKeyPressed;
-        private bool leftKeyPressed;
-        private bool rightKeyPressed;
-        private bool ctrlKeyPressed;
+        private bool moveForward;
+        private bool turnLeft;
+        private bool turnRight;
+        private bool shoot;
 
         private bool lockFire;
         private PlayerData data;
@@ -32,35 +32,35 @@ namespace Entities
             lockFire = InputManager.Data.lockFire;
         
             InputManager.MoveForwardKeyPressed += MoveForward;
-            InputManager.MoveLeftKeyPressed += MoveLeft;
-            InputManager.MoveRightKeyPressed += MoveRight;
-            InputManager.ShootKeyPressed += OnCtrlKeyPressed;
+            InputManager.MoveLeftKeyPressed += TurnLeft;
+            InputManager.MoveRightKeyPressed += TurnRight;
+            InputManager.ShootKeyPressed += Shoot;
         }
 
         private void MoveForward()
         {
-            upKeyPressed = true;
+            moveForward = true;
         }
 
-        private void MoveLeft()
+        private void TurnLeft()
         {
-            leftKeyPressed = true;
+            turnLeft = true;
         }
 
-        private void MoveRight()
+        private void TurnRight()
         {
-            rightKeyPressed = true;
+            turnRight = true;
         }
 
-        private void OnCtrlKeyPressed()
+        private void Shoot()
         {
             if (lockFire)
             {
-                ctrlKeyPressed = !ctrlKeyPressed;
+                shoot = !shoot;
             }
             else
             {
-                ctrlKeyPressed = true;
+                shoot = true;
             }
         }
 
@@ -72,17 +72,17 @@ namespace Entities
 
         private void HandleInput()
         {
-            movementManager.SetMovement(upKeyPressed, leftKeyPressed, rightKeyPressed);
-            upKeyPressed = false;
-            leftKeyPressed = false;
-            rightKeyPressed = false;
+            movementManager.SetMovement(moveForward, turnLeft, turnRight);
+            moveForward = false;
+            turnLeft = false;
+            turnRight = false;
 
-            if (ctrlKeyPressed)
+            if (shoot)
             {
                 Fire();
                 if (!lockFire)
                 {
-                    ctrlKeyPressed = false;
+                    shoot = false;
                 }
             }
         }
@@ -95,9 +95,9 @@ namespace Entities
         private void OnDestroy()
         {
             InputManager.MoveForwardKeyPressed -= MoveForward;
-            InputManager.MoveLeftKeyPressed -= MoveLeft;
-            InputManager.MoveRightKeyPressed -= MoveRight;
-            InputManager.ShootKeyPressed -= OnCtrlKeyPressed;
+            InputManager.MoveLeftKeyPressed -= TurnLeft;
+            InputManager.MoveRightKeyPressed -= TurnRight;
+            InputManager.ShootKeyPressed -= Shoot;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

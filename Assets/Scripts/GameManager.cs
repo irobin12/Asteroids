@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class GameManager: MonoBehaviour
 {
@@ -11,7 +10,7 @@ public class GameManager: MonoBehaviour
     [SerializeField] private HUD hud;
 
     private Player player;
-    private RockSpawner rockSpawner;
+    private RocksManager rocksManager;
     private int currentHealth;
     private int currentScore;
     
@@ -32,9 +31,9 @@ public class GameManager: MonoBehaviour
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
         InputManager.SetUp(gameData.player);
         
-        if (!TryGetComponent(out rockSpawner))
+        if (!TryGetComponent(out rocksManager))
         {
-            rockSpawner = gameObject.AddComponent<RockSpawner>();
+            rocksManager = gameObject.AddComponent<RocksManager>();
         }
     }
 
@@ -61,7 +60,8 @@ public class GameManager: MonoBehaviour
         hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
         SetHealth(gameData.startingHealth);
         CreatePlayer();
-        CreateRocks();
+        rocksManager.SetUp(gameData.levels[0]);
+        rocksManager.OnScoreChanged += SetScore;
     }
 
     private void SetHealth(int health)
@@ -107,13 +107,6 @@ public class GameManager: MonoBehaviour
         player.Reset();
         yield return new WaitForSeconds(gameData.player.respawnTime);
         player.gameObject.SetActive(true);
-    }
-
-    private void CreateRocks()
-    {
-        rockSpawner.SetUp(gameData.rock);
-        rockSpawner.SpawnFirstRocks(gameData.levels[0].startingRocksToSpawn);
-        rockSpawner.OnRockDestroyed += SetScore;
     }
 
     private void SetScore(int scoreAdded)

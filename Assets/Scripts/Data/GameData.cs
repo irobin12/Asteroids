@@ -6,7 +6,6 @@ namespace Data
     public class GameData : ScriptableObject
     {
         public PlayerData player;
-        public RockData rock;
         public Enemy enemy;
 
         [Tooltip("The number of lives the player starts the game with.")]

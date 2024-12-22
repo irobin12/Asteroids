@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4326502695572418577}
   - component: {fileID: 3811257734017037586}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BlankWhite (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7660630394374137401}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

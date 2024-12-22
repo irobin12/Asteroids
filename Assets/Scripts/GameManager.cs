@@ -4,14 +4,14 @@ using Data;
 using Entities;
 using UnityEngine;
 
-
+[RequireComponent(typeof(PlayerManager))]
 public class GameManager: MonoBehaviour
 {
     [SerializeField] private GameData gameData;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private HUD hud;
-
-    private Player player;
+    [SerializeField]private PlayerManager playerManager;
+    
     private RocksManager rocksManager;
     private int currentHealth;
     private int currentScore;
@@ -34,38 +34,18 @@ public class GameManager: MonoBehaviour
         InputManager.SetUp(gameData.inputData);
 
         gameObject.TryAddComponent(out rocksManager);
-        // rocksManager = TryAddComponent();
     }
 
     private void Start()
     {
         hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
         SetHealth(gameData.startingHealth);
-        CreatePlayer();
+        
+        playerManager.SetUp(gameData.player);
+        playerManager.PlayerDeath += OnPlayerDeath;
+        
         rocksManager.SetUp(gameData.levels[0]);
         rocksManager.OnScoreChanged += SetScore;
-    }
-
-    private void SetHealth(int health)
-    {
-        if (health == currentHealth || health >= gameData.maxHealth) return;
-        
-        currentHealth = health;
-        HealthChanged?.Invoke(currentHealth);
-    }
-
-    private void CreatePlayer()
-    {
-        player = Instantiate(gameData.player.prefab);
-        if (player != null)
-        {
-            player.SetUp(gameData.player);
-            player.Destroyed += OnPlayerDeath;
-        }
-        else
-        {
-            Debug.LogWarning($"PlayerData needs a prefab with a Player component attached for the game to run!");
-        }
     }
 
     private void OnPlayerDeath()
@@ -77,15 +57,16 @@ public class GameManager: MonoBehaviour
         }
         else
         {
-            StartCoroutine(RespawnPlayer());
+            StartCoroutine(playerManager.RespawnPlayer());
         }
     }
 
-    private IEnumerator RespawnPlayer()
+    private void SetHealth(int health)
     {
-        player.Reset();
-        yield return new WaitForSeconds(gameData.player.respawnTime);
-        player.gameObject.SetActive(true);
+        if (health == currentHealth || health >= gameData.maxHealth) return;
+        
+        currentHealth = health;
+        HealthChanged?.Invoke(currentHealth);
     }
 
     private void SetScore(int scoreAdded)
@@ -97,5 +78,10 @@ public class GameManager: MonoBehaviour
     private void Update()
     {
         InputManager.Update();
+    }
+
+    private void OnDestroy()
+    {
+        rocksManager.OnScoreChanged -= SetScore;
     }
 }

@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9f4a59ee094a47b29436d525c86a42, type: 3}
   m_Name: Input
   m_EditorClassIdentifier: 
-  moveForwardKeys: 
-  moveLeftKeys: 
-  moveRightKeys: 
-  shootKeys: 
-  teleportationKeys: 
+  moveForwardKeys: 1101000077000000
+  moveLeftKeys: 1401000061000000
+  moveRightKeys: 1301000064000000
+  shootKeys: 3201000031010000
+  teleportationKeys: 20000000
+  continuousFire: 1
+  lockFire: 0

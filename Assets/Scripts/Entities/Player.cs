@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Data;
 using UnityEngine;
 
@@ -7,18 +8,19 @@ namespace Entities
     [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
     public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
     {
-        public Action Destroyed;
-
+        public Action Death;
+        
         private ProjectileSpawner projectileSpawner;
         private MovementManager movementManager;
+
+        private bool lockFire;
+        private PlayerData data;
 
         private bool moveForward;
         private bool turnLeft;
         private bool turnRight;
         private bool shoot;
-
-        private bool lockFire;
-        private PlayerData data;
+        private bool isAlreadyDestroyed; // To avoid calling Destroyed twice if hit by two enemies simultaneously
         
         public void SetUp(PlayerData playerData)
         {
@@ -92,14 +94,6 @@ namespace Entities
             projectileSpawner.SpawnProjectile();
         }
 
-        private void OnDestroy()
-        {
-            InputManager.MoveForwardKeyPressed -= MoveForward;
-            InputManager.MoveLeftKeyPressed -= TurnLeft;
-            InputManager.MoveRightKeyPressed -= TurnRight;
-            InputManager.ShootKeyPressed -= Shoot;
-        }
-
         private void OnTriggerEnter2D(Collider2D other)
         {
             Destroy();
@@ -107,14 +101,27 @@ namespace Entities
 
         public void Reset()
         {
+            isAlreadyDestroyed = false;
             transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
+            gameObject.SetActive(true);
         }
 
         public void Destroy()
         {
-            Destroyed?.Invoke();
+            if(isAlreadyDestroyed) return;
+            
+            isAlreadyDestroyed = true;
+            Death?.Invoke();
             gameObject.SetActive(false);
+        }
+
+        private void OnDestroy()
+        {
+            InputManager.MoveForwardKeyPressed -= MoveForward;
+            InputManager.MoveLeftKeyPressed -= TurnLeft;
+            InputManager.MoveRightKeyPressed -= TurnRight;
+            InputManager.ShootKeyPressed -= Shoot;
         }
     }
 }

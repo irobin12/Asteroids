@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ac018d3363484180988f22f1c7ca98c, type: 3}
   m_Name: Game
   m_EditorClassIdentifier: 
+  inputData: {fileID: 11400000, guid: e907edaac1a3249cdb4370782b0b2da1, type: 2}
   player: {fileID: 11400000, guid: 1de387e375f56408f987f2d4ab0404cf, type: 2}
-  rock: {fileID: 11400000, guid: dddd6704ae99e4957bf82b3e1432e974, type: 2}
-  enemy: {fileID: 0}
   startingHealth: 3
   maxHealth: 5
   scorePerBonusLife: 1000

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Data;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace Entities
         {
             data = playerData;
             movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(data);
+            movementManager.SetUp(data.launchVelocity, data.rotationSpeed);
             
             projectileSpawner = GetComponent<ProjectileSpawner>();
             projectileSpawner.SetUp(data.projectileData);

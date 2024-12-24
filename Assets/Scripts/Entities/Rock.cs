@@ -14,9 +14,9 @@ namespace Entities
 
         public void SetUp(RockData data)
         {
-            movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(data);
             Data = data;
+            movementManager = GetComponent<MovementManager>();
+            movementManager.SetUp(Data.launchVelocity, Data.rotationSpeed);
             movementManager.SetMovement(true, false, false);
         }
 
@@ -26,7 +26,7 @@ namespace Entities
         {
             if (other.gameObject.CompareTag("Projectile"))
             {
-                if (TryGetComponent(out Projectile projectile))
+                if (other.gameObject.TryGetComponent(out Projectile projectile))
                 {
                     projectile.Destroy();
                 }

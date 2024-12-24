@@ -12,10 +12,10 @@ public class MovementManager: MonoBehaviour
     private bool canMoveLeft;
     private bool canMoveRight;
 
-    public void SetUp(EntityData data)
+    public void SetUp(float thrust, float torque = 0f)
     {
-        thrust = data.thrust;
-        torque = data.torque;
+        this.thrust = thrust;
+        this.torque = torque;
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 

@@ -11,6 +11,9 @@ public class PlayerManager: MonoBehaviour
     public Action PlayerDeath;
     private Player player;
     private PlayerData playerData;
+    /// <summary>
+    /// Used to set a safe area of respawn.
+    /// </summary>
     private readonly HashSet<Collider2D> collidingWith = new();
     
     public void SetUp(PlayerData data)
@@ -35,16 +38,13 @@ public class PlayerManager: MonoBehaviour
     
     public IEnumerator RespawnPlayer()
     {
-        Debug.Log("Waiting for respawn");
         yield return new WaitForSeconds(playerData.respawnTime);
         
         while (collidingWith.Count > 0)
         {
-            Debug.Log("Can't respawn, enemies are too close");
             yield return null;
         }
         
-        Debug.Log("Respawn");
         player.Reset();
     }
 
@@ -60,13 +60,11 @@ public class PlayerManager: MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"Adding {other.name}");
         collidingWith.Add(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log($"Removing {other.name}");
         collidingWith.Remove(other);
     }
 }

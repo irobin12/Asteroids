@@ -17,10 +17,10 @@ namespace Entities
 
         public void SetUp(ProjectileData projectileData)
         { 
-            this.data = projectileData;
-            lifetime = this.data.lifetime;
+            data = projectileData;
+            lifetime = data.lifetime;
             movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(projectileData);
+            movementManager.SetUp(projectileData.launchVelocity, projectileData.rotationSpeed);
             movementManager.SetMovement(true, false, false);
         }
 
@@ -48,6 +48,7 @@ namespace Entities
         /// </summary>
         public void Destroy()
         {
+            // Release to pool
             Destroyed?.Invoke(this);
         }
     }

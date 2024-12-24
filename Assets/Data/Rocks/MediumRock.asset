@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b9bd6238864236ad4e300c7dc9e06c, type: 3}
-  m_Name: SmallRock
+  m_Name: MediumRock
   m_EditorClassIdentifier: 
+  launchVelocity: 20
+  rotationSpeed: 0
   prefab: {fileID: 1615962829292360016, guid: 3c290cf69e8c441288b026e198ba6f99, type: 3}
-  thrust: 19.96
-  torque: 5
-  collectable: 1
-  spawnedRock: {fileID: 0}
-  score: 10000
+  collectable: 0
+  score: 5000
+  spawnedRock: {fileID: 11400000, guid: 16544ebb832fc430dae39e07465e99d2, type: 2}
+  spawnedRocksAmount: 2
+  minSpawnAngleDeviation: 10
+  maxSpawnAngleDeviation: 90
+  minVelocityMultiplier: 0.9
+  maxVelocityMultiplier: 1.2

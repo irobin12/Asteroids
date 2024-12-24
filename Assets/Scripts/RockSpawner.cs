@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Data;
 using Entities;
 using UnityEngine;
@@ -6,13 +7,14 @@ using Random = UnityEngine.Random;
 
 public class RockSpawner : EntitySpawner<Rock>
 {
-    public Action<int> OnRockDestroyed;
-
+    public Action<Rock> OnRockDestroyed;
+    private List<GameObjectPool<Rock>> childRocksPools;
+    
     public void SpawnFirstRocks(int rocksToSpawn, RockData rockData)
     {
         for (int i = 0; i < rocksToSpawn; i++)
         {
-            var randomPosition = CreateRandomPosition(Random.Range(0, 4));
+            var randomPosition = CreateRandomRockPosition(Random.Range(0, 4));
             var randomRotation = Random.Range(0f, 360f);
             
             SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
@@ -25,7 +27,7 @@ public class RockSpawner : EntitySpawner<Rock>
     /// </summary>
     /// <param name="border">0 = top, 1 = bottom, 2 = left, 3 = right</param>
     /// <returns></returns>
-    private static Vector3 CreateRandomPosition(int border)
+    private static Vector3 CreateRandomRockPosition(int border)
     {
         Vector3 randomPosition;
         if (border is 0 or 1)
@@ -55,9 +57,45 @@ public class RockSpawner : EntitySpawner<Rock>
 
     private void ReleaseRock(Rock rock)
     {
-        OnRockDestroyed?.Invoke(rock.Data.score);
-    
         rock.Destroyed -= ReleaseRock;
         Pool.ReleaseGameObject(rock);
+        OnRockDestroyed?.Invoke(rock);
+
+        // if (rock.Data.spawnedRock != null)
+        // {
+        //     SetUpChildPool(rock);
+        //     // SpawnChildRocks(rock);
+        // }
+            
+    }
+    
+    // private void SetUpChildPool(Rock parentRock, int defaultSize = 5, int maxSize = 15)
+    // {
+    //     var prefab = parentRock.Data.spawnedRock.prefab;
+    //     childRocksPools.Add(new(prefab, defaultSize, maxSize));
+    // }
+
+    public void SpawnChildRocks(Rock parentRock)
+    {
+        var childRockData = parentRock.Data.spawnedRock;
+        // In 2D space, z of position is always 0
+        var parentPosition = parentRock.transform.position;
+        // In 2D space, x and y of rotation is always 0
+        var parentRotation = parentRock.transform.rotation;
+
+        var angleDeviation = parentRock.Data.maxSpawnAngleDeviation;
+        
+        for (int i = 0; i < parentRock.Data.spawnedRocksAmount; i++)
+        {
+            var minAngleDeviation = parentRotation.z + parentRock.Data.minSpawnAngleDeviation;
+            var childNewAngle = Random.Range(minAngleDeviation - angleDeviation, minAngleDeviation + angleDeviation);
+            var childRotation = parentRotation * Quaternion.Euler(0, 0, childNewAngle);
+
+            var velocityMultiplier = Random.Range(parentRock.Data.minVelocityMultiplier, parentRock.Data.maxVelocityMultiplier);
+            var newRockData = childRockData;
+            newRockData.launchVelocity = parentRock.Data.launchVelocity * velocityMultiplier;
+            
+            SpawnRock(parentPosition, childRotation, newRockData);
+        }
     }
 }

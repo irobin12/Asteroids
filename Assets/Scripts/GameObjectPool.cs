@@ -11,7 +11,7 @@ public class GameObjectPool<T> where T : MonoBehaviour
     
     public GameObjectPool(T prefab, int defaultSize = 5, int maxSize = 20)
     {
-        this.objectToPool = prefab;
+        objectToPool = prefab;
         parent = new GameObject($"{prefab.name}Pool").transform;
         
         pool = new ObjectPool<T>(

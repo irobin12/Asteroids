@@ -8,9 +8,7 @@ public class RocksManager: MonoBehaviour
 {
     public Action<int> OnScoreChanged;
     public Action<Rock> OnRockCollected;
-    // private RockSpawner[] rockSpawners;
     private Dictionary<int, RockSpawner> spawnerByRockDataId;
-    // private RockSpawner rockSpawner;
     private LevelData levelData;
 
     public void SetUp(LevelData data)
@@ -18,14 +16,7 @@ public class RocksManager: MonoBehaviour
         levelData = data;
         spawnerByRockDataId = new Dictionary<int, RockSpawner>();
         
-        // spawnerByRockData.Add(firstRockData, firstRockSpawner);
-
-        // if (!TryGetComponent(out rockSpawner))
-        // {
-            // rockSpawner = gameObject.AddComponent<RockSpawner>();
-        // }
-        
-        CreateFirstRocks(data.startingRockData, levelData.startingRocksToSpawn, GetOrCreateNewRockSpawner(data.startingRockData));
+        GetOrCreateNewRockSpawner(data.startingRockData).SpawnFirstRocks(levelData.startingRocksToSpawn, data.startingRockData);
     }
 
     private RockSpawner AddRockSpawner()
@@ -41,7 +32,7 @@ public class RocksManager: MonoBehaviour
         }
         else
         {
-            CreateChildRocks(rock, GetOrCreateNewRockSpawner(rock.Data.spawnedRock));
+            GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
             var addedScore = rock.Data.score;
             OnScoreChanged?.Invoke(addedScore);
         }
@@ -54,21 +45,10 @@ public class RocksManager: MonoBehaviour
         {
             rockSpawner = AddRockSpawner();
             spawnerByRockDataId[rockToSpawnId] = rockSpawner;
+            SetUpSpawner(rockToSpawn.prefab, rockSpawner);
         }
 
         return rockSpawner;
-    }
-
-    private void CreateFirstRocks(RockData rockToSpawn, int rockCount, RockSpawner rockSpawner)
-    {
-        SetUpSpawner(rockToSpawn.prefab, rockSpawner);
-        rockSpawner.SpawnFirstRocks(rockCount, rockToSpawn);
-    }
-    
-    private void CreateChildRocks(Rock parentRock, RockSpawner rockSpawner)
-    {
-        SetUpSpawner(parentRock.Data.spawnedRock.prefab, rockSpawner);
-        rockSpawner.SpawnChildRocks(parentRock);
     }
 
     private void SetUpSpawner(Rock rockToSpawn, RockSpawner rockSpawner)

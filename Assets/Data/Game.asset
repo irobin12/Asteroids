@@ -16,6 +16,6 @@ MonoBehaviour:
   player: {fileID: 11400000, guid: 1de387e375f56408f987f2d4ab0404cf, type: 2}
   startingHealth: 3
   maxHealth: 5
-  scorePerBonusLife: 1000
+  scorePerBonusLife: 10000
   levels:
   - {fileID: 11400000, guid: 1e1c859187b0e410a9f79bd170fb0366, type: 2}

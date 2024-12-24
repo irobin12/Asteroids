@@ -79,6 +79,8 @@ public class HUD: MonoBehaviour
                 SetLifeIconActive(lifeIcons[i], false);
             }
         }
+        
+        currentHealth = newHealth;
     }
 
     private void SetLifeIconActive(Image icon, bool setActive)

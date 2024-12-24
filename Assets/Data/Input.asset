@@ -17,5 +17,5 @@ MonoBehaviour:
   moveRightKeys: 1301000064000000
   shootKeys: 3201000031010000
   teleportationKeys: 20000000
-  continuousFire: 1
+  continuousFire: 0
   lockFire: 0

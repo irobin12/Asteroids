@@ -8,7 +8,11 @@ namespace Data
     {
         public Player prefab;
         public ProjectileData projectileData;
-        [Tooltip("Player respawn countdown time in seconds.")]
+        
+        [Tooltip("Player respawn countdown time in seconds after death.")]
         public float respawnTime = 2f;
+
+        [Tooltip("Time between the beginning of the teleportation and the reappearance on screen.")]
+        public float teleportationTime = 0.5f;
     }
 }

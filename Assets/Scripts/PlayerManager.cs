@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Data;
 using Entities;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Collider2D))]
 public class PlayerManager: MonoBehaviour
@@ -19,7 +20,25 @@ public class PlayerManager: MonoBehaviour
     public void SetUp(PlayerData data)
     {
         playerData = data;
-        CreatePlayer();
+        CreatePlayer();            
+        InputManager.TeleportationKeyPressed += Teleport;
+    }
+
+    private void Teleport()
+    {
+        StartCoroutine(MovePlayerAndWait());
+    }
+
+    private IEnumerator MovePlayerAndWait()
+    {
+        player.gameObject.SetActive(false);
+
+        var positionX = Random.Range(ScreenManager.WorldMinCorner.x, ScreenManager.WorldMaxCorner.x);
+        var positionY = Random.Range(ScreenManager.WorldMinCorner.y, ScreenManager.WorldMaxCorner.y);
+        player.transform.position = new Vector3(positionX, positionY, 0);
+        yield return new WaitForSeconds(playerData.teleportationTime);
+        
+        player.gameObject.SetActive(true);
     }
 
     private void CreatePlayer()

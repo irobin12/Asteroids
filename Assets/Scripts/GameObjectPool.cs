@@ -36,8 +36,6 @@ public class GameObjectPool<T> where T : MonoBehaviour, IPoolable
     private T CreatePooledObject()
     {
         var pooledObject = Object.Instantiate(objectToPool, parent);
-        // pooledObject.
-        // pooledObject.SetUp(entityData);
         ReleaseAll += pooledObject.Release;
         return pooledObject;
     }

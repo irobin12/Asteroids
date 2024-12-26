@@ -16,8 +16,7 @@ public class RockSpawner : EntitySpawner<Rock>
             var randomPosition = CreateRandomRockPosition(Random.Range(0, 4));
             var randomRotation = Random.Range(0f, 360f);
             
-            var rock = SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
-            rock.name = rockData.name + " " + i;
+            SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
         }
     }
 
@@ -48,13 +47,12 @@ public class RockSpawner : EntitySpawner<Rock>
         return randomPosition;
     }
 
-    private Rock SpawnRock(Vector3 position, Quaternion rotation, RockData data)
+    private void SpawnRock(Vector3 position, Quaternion rotation, RockData data)
     {
         var rock = Pool.GetObject(position, rotation);
         rock.Destroyed += OnRockDestroyed;
         rock.Released += OnRockReleased;
         rock.SetUp(data);
-        return rock;
     }
 
     private void OnRockReleased(Rock rock)
@@ -66,12 +64,6 @@ public class RockSpawner : EntitySpawner<Rock>
     {
         ReleaseRock(rock);
         RockDestroyed?.Invoke(rock);
-
-        // if (rock.Data.spawnedRock != null)
-        // {
-        //     SetUpChildPool(rock);
-        //     // SpawnChildRocks(rock);
-        // }
     }
 
     private void ReleaseRock(Rock rock)
@@ -80,12 +72,6 @@ public class RockSpawner : EntitySpawner<Rock>
         rock.Released -= OnRockReleased;
         Pool.ReleaseGameObject(rock);
     }
-
-    // private void SetUpChildPool(Rock parentRock, int defaultSize = 5, int maxSize = 15)
-    // {
-    //     var prefab = parentRock.Data.spawnedRock.prefab;
-    //     childRocksPools.Add(new(prefab, defaultSize, maxSize));
-    // }
 
     public void SpawnChildRocks(Rock parentRock)
     {
@@ -107,9 +93,7 @@ public class RockSpawner : EntitySpawner<Rock>
             var newRockData = childRockData;
             newRockData.launchVelocity = parentRock.Data.launchVelocity * velocityMultiplier;
             
-            var rock = SpawnRock(parentPosition, childRotation, newRockData);
-            // rock.name = rockData.name + " " + i;
-
+            SpawnRock(parentPosition, childRotation, newRockData);
         }
     }
 }

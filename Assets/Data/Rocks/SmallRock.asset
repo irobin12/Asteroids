@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b9bd6238864236ad4e300c7dc9e06c, type: 3}
   m_Name: SmallRock
   m_EditorClassIdentifier: 
-  launchVelocity: 19.71468
+  launchVelocity: 24.542898
   rotationSpeed: 0
   prefab: {fileID: 1615962829292360016, guid: 704ef93507ce94650a1c26f261651304, type: 3}
-  collectable: 1
-  score: 10000
+  collectable: 0
+  score: 1000
   spawnedRock: {fileID: 0}
   spawnedRocksAmount: 0
   minSpawnAngleDeviation: 10

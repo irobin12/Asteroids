@@ -16,7 +16,7 @@ MonoBehaviour:
   rotationSpeed: 0
   prefab: {fileID: 1615962829292360016, guid: aa4629b9c077f4f4aba88b9d1907b390, type: 3}
   collectable: 0
-  score: 2000
+  score: 200
   spawnedRock: {fileID: 11400000, guid: 2c0ffcdb6dffb4992b625adaba0f77c4, type: 2}
   spawnedRocksAmount: 2
   minSpawnAngleDeviation: 10

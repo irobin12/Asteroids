@@ -7,9 +7,11 @@ namespace Entities
     [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
     public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
     {
-        public Action Death;
+        [SerializeField] private Animation animationWaitingForRespawn;
         
-        private ProjectileSpawner projectileSpawner;
+        public Action Death;
+        public ProjectileSpawner ProjectileSpawner {get; private set;}
+        
         private MovementManager movementManager;
 
         private bool lockFire;
@@ -27,8 +29,8 @@ namespace Entities
             movementManager = GetComponent<MovementManager>();
             movementManager.SetUp(data.launchVelocity, data.rotationSpeed);
             
-            projectileSpawner = GetComponent<ProjectileSpawner>();
-            projectileSpawner.SetUp(data.projectileData);
+            ProjectileSpawner = GetComponent<ProjectileSpawner>();
+            ProjectileSpawner.SetUp(data.projectileData);
         
             lockFire = InputManager.Data.lockFire;
         
@@ -90,7 +92,7 @@ namespace Entities
 
         private void Fire()
         {
-            projectileSpawner.SpawnProjectile();
+            ProjectileSpawner.SpawnProjectile();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -122,5 +124,15 @@ namespace Entities
             InputManager.MoveRightKeyPressed -= TurnRight;
             InputManager.ShootKeyPressed -= Shoot;
         }
+
+        public void PrepareForRespawn()
+        {
+            gameObject.SetActive(true);
+            if (animationWaitingForRespawn != null)
+            {
+                animationWaitingForRespawn.Play();
+            }
+        }
+        
     }
 }

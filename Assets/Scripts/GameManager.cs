@@ -1,21 +1,10 @@
 using System;
-using System.Collections;
 using Data;
-using Entities;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(PlayerManager), typeof(RocksManager))]
 public class GameManager: MonoBehaviour
 {
-    [SerializeField] private GameData gameData;
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private HUD hud;
-    [SerializeField]private PlayerManager playerManager;
-    
-    private RocksManager rocksManager;
-    private int currentHealth;
-    private int currentScore;
-    
     /// <summary>
     /// int is the new health
     /// </summary>
@@ -25,27 +14,60 @@ public class GameManager: MonoBehaviour
     /// int is the new score
     /// </summary>
     public Action<int> ScoreChanged;
+    
+    [SerializeField] private GameData gameData;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private HUD hud;
+    
+    private DataValidator dataValidator;
+    private PlayerManager playerManager;
+    private RocksManager rocksManager;
+    
+    private int currentHealth;
+    private int currentScore;
 
     private void Awake()
     {
-        DataValidator.VerifyData(gameData);
+        dataValidator = new DataValidator(gameData);
+        dataValidator.VerifyData();
 
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
         InputManager.SetUp(gameData.inputData);
 
-        gameObject.TryAddComponent(out rocksManager);
+        playerManager = GetComponent<PlayerManager>();
+        rocksManager = GetComponent<RocksManager>();
     }
 
     private void Start()
     {
+        InputManager.RestartKeyPressed += RestartGame;
+        
         hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
-        TrySetHealth(gameData.startingHealth);
         
         playerManager.SetUp(gameData.player);
         playerManager.PlayerDeath += OnPlayerDeath;
         
         rocksManager.SetUp(gameData.levels[0]);
-        rocksManager.OnScoreChanged += SetScore;
+        rocksManager.OnScoreChanged += ChangeScore;
+        
+        SetGameFromStart();
+    }
+
+    private void SetGameFromStart()
+    {
+        TrySetHealth(gameData.startingHealth);
+        SetScoreAt(0);
+        playerManager.ResetPlayer();
+        rocksManager.SetFromStart();
+        // Reset player
+        // Reset projectiles
+        // Reset rocks
+        // Reset enemies
+    }
+
+    private void RestartGame()
+    {
+        SetGameFromStart();
     }
 
     private void OnPlayerDeath()
@@ -69,12 +91,18 @@ public class GameManager: MonoBehaviour
         HealthChanged?.Invoke(currentHealth);
     }
 
-    private void SetScore(int scoreAdded)
+    private void ChangeScore(int scoreAdded)
     {
         var previousScore = currentScore;
         currentScore += scoreAdded;
         TryAddBonusLife(previousScore);
-        ScoreChanged?.Invoke(currentScore);
+        
+        SetScoreAt(currentScore);
+    }
+
+    private void SetScoreAt(int score)
+    {
+        ScoreChanged?.Invoke(score);
     }
 
     /// <summary>
@@ -100,6 +128,7 @@ public class GameManager: MonoBehaviour
 
     private void OnDestroy()
     {
-        rocksManager.OnScoreChanged -= SetScore;
+        if(playerManager) playerManager.PlayerDeath -= OnPlayerDeath;
+        if(rocksManager) rocksManager.OnScoreChanged -= ChangeScore;
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public static class InputManager
 {
@@ -10,6 +9,7 @@ public static class InputManager
     public static Action MoveRightKeyPressed;
     public static Action ShootKeyPressed;
     public static Action TeleportationKeyPressed;
+    public static Action RestartKeyPressed;
     
     public static InputData Data {get; private set;}
     
@@ -20,45 +20,45 @@ public static class InputManager
     
     public static void Update()
     {
-        foreach (KeyCode keyCode in Data.moveForwardKeys)
+        foreach (var key in Data.moveForwardKeys)
         {
-            if (Input.GetKey(keyCode))
+            if (Input.GetKey(key))
             {
                 MoveForwardKeyPressed?.Invoke();
                 break;
             }
         }
 
-        foreach (KeyCode keyCode in Data.moveLeftKeys)
+        foreach (var key in Data.moveLeftKeys)
         {
-            if (Input.GetKey(keyCode))
+            if (Input.GetKey(key))
             {
                 MoveLeftKeyPressed?.Invoke();
                 break;
             }
         }
 
-        foreach (KeyCode keyCode in Data.moveRightKeys)
+        foreach (var key in Data.moveRightKeys)
         {
-            if (Input.GetKey(keyCode))
+            if (Input.GetKey(key))
             {
                 MoveRightKeyPressed?.Invoke();
                 break;
             }
         }
         
-        foreach (KeyCode keyCode in Data.shootKeys)
+        foreach (var key in Data.shootKeys)
         {
             if (Data.continuousFire)
             {
-                if (Input.GetKey(keyCode))
+                if (Input.GetKey(key))
                 {
                     ShootKeyPressed?.Invoke();
                 }
             }
             else
             {
-                if (Input.GetKeyDown(keyCode))
+                if (Input.GetKeyDown(key))
                 {
                     ShootKeyPressed?.Invoke();
                 }
@@ -67,17 +67,20 @@ public static class InputManager
             break;
         }
 
-        // if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)
-        //         || (Data.continuousFire && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))))
-        // {
-        //     ShootKeyPressed?.Invoke();
-        // }
-
-        foreach (KeyCode keyCode in Data.teleportationKeys)
+        foreach (var key in Data.teleportationKeys)
         {
-            if (Input.GetKey(keyCode))
+            if (Input.GetKeyDown(key))
             {
                 TeleportationKeyPressed?.Invoke();
+                break;
+            }
+        }
+
+        foreach (var key in Data.restartKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                RestartKeyPressed?.Invoke();
                 break;
             }
         }

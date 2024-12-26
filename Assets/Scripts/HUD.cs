@@ -18,16 +18,11 @@ public class HUD: MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        
-        SetUpScore(gameManager);
-        SetUpHealth(gameManager, maxHealth, startingHealth);
-        SetGameOverTextActive(false);
-    }
 
-    private void SetUpScore(GameManager gameManager)
-    {
         gameManager.ScoreChanged += OnScoreChanged;
         SetScore(0);
+        SetUpHealth(gameManager, maxHealth, startingHealth);
+        SetGameOverTextActive(false);
     }
 
     private void SetUpHealth(GameManager gameManager, int maxHealth, int startingHealth)

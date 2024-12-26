@@ -54,6 +54,13 @@ public class PlayerManager: MonoBehaviour
             Debug.LogWarning($"PlayerData needs a prefab with a Player component attached for the game to run!");
         }
     }
+
+    public void ResetPlayer()
+    {
+        // player.ProjectileSpawner.ReleaseAll();
+        player.gameObject.SetActive(false);
+        player.Reset();
+    }
     
     public IEnumerator RespawnPlayer()
     {

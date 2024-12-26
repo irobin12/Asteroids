@@ -10,6 +10,7 @@ namespace Data
         public KeyCode[] moveRightKeys;
         public KeyCode[] shootKeys;
         public KeyCode[] teleportationKeys;
+        public KeyCode[] restartKeys;
         
         [Header("Accessibility")]
         [Tooltip("Can the projectile fire key be held down to shoot continuously?")]

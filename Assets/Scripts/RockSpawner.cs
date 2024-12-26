@@ -17,7 +17,8 @@ public class RockSpawner : EntitySpawner<Rock>
             var randomPosition = CreateRandomRockPosition(Random.Range(0, 4));
             var randomRotation = Random.Range(0f, 360f);
             
-            SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
+            var rock = SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
+            rock.name = rockData.name + " " + i;
         }
     }
 
@@ -48,11 +49,12 @@ public class RockSpawner : EntitySpawner<Rock>
         return randomPosition;
     }
 
-    private void SpawnRock(Vector3 position, Quaternion rotation, RockData data)
+    private Rock SpawnRock(Vector3 position, Quaternion rotation, RockData data)
     {
         var rock = Pool.GetObject(position, rotation);
         rock.Destroyed += ReleaseRock;
         rock.SetUp(data);
+        return rock;
     }
 
     private void ReleaseRock(Rock rock)
@@ -95,7 +97,9 @@ public class RockSpawner : EntitySpawner<Rock>
             var newRockData = childRockData;
             newRockData.launchVelocity = parentRock.Data.launchVelocity * velocityMultiplier;
             
-            SpawnRock(parentPosition, childRotation, newRockData);
+            var rock = SpawnRock(parentPosition, childRotation, newRockData);
+            // rock.name = rockData.name + " " + i;
+
         }
     }
 }

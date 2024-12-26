@@ -1,138 +1,123 @@
 using System;
-using Data;
 using UnityEngine;
 
-namespace Entities
+[RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
+public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
 {
-    [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
-    public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
+    [SerializeField] private Animation animationWaitingForRespawn;
+    private PlayerData data;
+
+    public Action Death;
+    private bool isAlreadyDestroyed; // To avoid calling Destroyed twice if hit by two enemies simultaneously
+
+    private bool lockFire;
+
+    private bool moveForward;
+
+    private MovementManager movementManager;
+    private bool shoot;
+    private bool turnLeft;
+    private bool turnRight;
+    public ProjectileSpawner ProjectileSpawner { get; private set; }
+
+    private void FixedUpdate()
     {
-        [SerializeField] private Animation animationWaitingForRespawn;
-        
-        public Action Death;
-        public ProjectileSpawner ProjectileSpawner {get; private set;}
-        
-        private MovementManager movementManager;
+        movementManager.FixedUpdate();
+        HandleInput();
+    }
 
-        private bool lockFire;
-        private PlayerData data;
+    private void OnDestroy()
+    {
+        InputManager.MoveForwardKeyPressed -= MoveForward;
+        InputManager.MoveLeftKeyPressed -= TurnLeft;
+        InputManager.MoveRightKeyPressed -= TurnRight;
+        InputManager.ShootKeyPressed -= Shoot;
+    }
 
-        private bool moveForward;
-        private bool turnLeft;
-        private bool turnRight;
-        private bool shoot;
-        private bool isAlreadyDestroyed; // To avoid calling Destroyed twice if hit by two enemies simultaneously
-        
-        public void SetUp(PlayerData playerData)
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Destroy();
+    }
+
+    public void Destroy()
+    {
+        if (isAlreadyDestroyed) return;
+
+        isAlreadyDestroyed = true;
+        Death?.Invoke();
+        gameObject.SetActive(false);
+    }
+
+    public void SetUp(PlayerData playerData)
+    {
+        data = playerData;
+        movementManager = GetComponent<MovementManager>();
+        movementManager.SetUp(data.launchVelocity, data.rotationSpeed);
+
+        ProjectileSpawner = GetComponent<ProjectileSpawner>();
+        ProjectileSpawner.SetUp(data.projectileData);
+
+        lockFire = InputManager.Data.lockFire;
+
+        InputManager.MoveForwardKeyPressed += MoveForward;
+        InputManager.MoveLeftKeyPressed += TurnLeft;
+        InputManager.MoveRightKeyPressed += TurnRight;
+        InputManager.ShootKeyPressed += Shoot;
+    }
+
+    public void SetFromStart()
+    {
+        isAlreadyDestroyed = false;
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        gameObject.SetActive(true);
+    }
+
+    private void MoveForward()
+    {
+        moveForward = true;
+    }
+
+    private void TurnLeft()
+    {
+        turnLeft = true;
+    }
+
+    private void TurnRight()
+    {
+        turnRight = true;
+    }
+
+    private void Shoot()
+    {
+        if (lockFire)
+            shoot = !shoot;
+        else
+            shoot = true;
+    }
+
+    private void HandleInput()
+    {
+        movementManager.SetMovement(moveForward, turnLeft, turnRight);
+        moveForward = false;
+        turnLeft = false;
+        turnRight = false;
+
+        if (shoot)
         {
-            data = playerData;
-            movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(data.launchVelocity, data.rotationSpeed);
-            
-            ProjectileSpawner = GetComponent<ProjectileSpawner>();
-            ProjectileSpawner.SetUp(data.projectileData);
-        
-            lockFire = InputManager.Data.lockFire;
-        
-            InputManager.MoveForwardKeyPressed += MoveForward;
-            InputManager.MoveLeftKeyPressed += TurnLeft;
-            InputManager.MoveRightKeyPressed += TurnRight;
-            InputManager.ShootKeyPressed += Shoot;
+            Fire();
+            if (!lockFire) shoot = false;
         }
+    }
 
-        private void MoveForward()
-        {
-            moveForward = true;
-        }
+    private void Fire()
+    {
+        ProjectileSpawner.SpawnProjectile();
+    }
 
-        private void TurnLeft()
-        {
-            turnLeft = true;
-        }
-
-        private void TurnRight()
-        {
-            turnRight = true;
-        }
-
-        private void Shoot()
-        {
-            if (lockFire)
-            {
-                shoot = !shoot;
-            }
-            else
-            {
-                shoot = true;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            movementManager.FixedUpdate();
-            HandleInput();
-        }
-
-        private void HandleInput()
-        {
-            movementManager.SetMovement(moveForward, turnLeft, turnRight);
-            moveForward = false;
-            turnLeft = false;
-            turnRight = false;
-
-            if (shoot)
-            {
-                Fire();
-                if (!lockFire)
-                {
-                    shoot = false;
-                }
-            }
-        }
-
-        private void Fire()
-        {
-            ProjectileSpawner.SpawnProjectile();
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            Destroy();
-        }
-
-        public void SetFromStart()
-        {
-            isAlreadyDestroyed = false;
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-            gameObject.SetActive(true);
-        }
-
-        public void Destroy()
-        {
-            if(isAlreadyDestroyed) return;
-            
-            isAlreadyDestroyed = true;
-            Death?.Invoke();
-            gameObject.SetActive(false);
-        }
-
-        private void OnDestroy()
-        {
-            InputManager.MoveForwardKeyPressed -= MoveForward;
-            InputManager.MoveLeftKeyPressed -= TurnLeft;
-            InputManager.MoveRightKeyPressed -= TurnRight;
-            InputManager.ShootKeyPressed -= Shoot;
-        }
-
-        public void PrepareForRespawn()
-        {
-            gameObject.SetActive(true);
-            if (animationWaitingForRespawn != null)
-            {
-                animationWaitingForRespawn.Play();
-            }
-        }
-        
+    public void PrepareForRespawn()
+    {
+        gameObject.SetActive(true);
+        if (animationWaitingForRespawn != null) animationWaitingForRespawn.Play();
     }
 }

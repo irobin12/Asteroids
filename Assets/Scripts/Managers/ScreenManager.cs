@@ -1,7 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Assuming that the window cannot get resized once the game is launched (as is currently set in the Project Settings/PLayer).
+///     Assuming that the window cannot get resized once the game is launched (as is currently set in the Project
+///     Settings/PLayer).
 /// </summary>
 public static class ScreenManager
 {

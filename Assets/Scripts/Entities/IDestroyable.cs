@@ -1,7 +1,4 @@
-namespace Entities
+public interface IDestroyable
 {
-    public interface IDestroyable
-    {
-        public void Destroy();
-    }
+    public void Destroy();
 }

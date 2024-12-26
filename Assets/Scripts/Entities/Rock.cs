@@ -1,49 +1,44 @@
 using System;
-using Data;
 using UnityEngine;
 
-namespace Entities
+[RequireComponent(typeof(MovementManager))]
+public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
 {
-    [RequireComponent(typeof(MovementManager))]
-    public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
+    public Action<Rock> Destroyed;
+    private MovementManager movementManager;
+    public Action<Rock> Released;
+
+    public RockData Data { get; private set; }
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        public Action<Rock> Destroyed;
-        public Action<Rock> Released;
-
-        public RockData Data { get; private set; }
-        private MovementManager movementManager;
-
-        public void SetUp(RockData data)
+        if (other.gameObject.CompareTag("Projectile"))
         {
-            Data = data;
-            movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(Data.launchVelocity, Data.rotationSpeed);
-            movementManager.SetMovement(true, false, false);
-        }
+            if (other.gameObject.TryGetComponent(out Projectile projectile)) projectile.Destroy();
 
-        public void SetFromStart() { }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject.CompareTag("Projectile"))
-            {
-                if (other.gameObject.TryGetComponent(out Projectile projectile))
-                {
-                    projectile.Destroy();
-                }
-                
-                Destroy();
-            }
+            Destroy();
         }
+    }
 
-        public void Destroy()
-        {
-            Destroyed?.Invoke(this);
-        }
+    public void Destroy()
+    {
+        Destroyed?.Invoke(this);
+    }
 
-        public void Release()
-        {
-            Released?.Invoke(this);
-        }
+    public void SetUp(RockData data)
+    {
+        Data = data;
+        movementManager = GetComponent<MovementManager>();
+        movementManager.SetUp(Data.launchVelocity);
+        movementManager.SetMovement(true, false, false);
+    }
+
+    public void SetFromStart()
+    {
+    }
+
+    public void Release()
+    {
+        Released?.Invoke(this);
     }
 }

@@ -1,22 +1,18 @@
-using Data;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class MovementManager: MonoBehaviour
+public class MovementManager : MonoBehaviour
 {
-    private new Rigidbody2D rigidbody2D;
-    private float thrust;
-    private float torque;
-    
     private bool canMoveForward;
     private bool canMoveLeft;
     private bool canMoveRight;
+    private new Rigidbody2D rigidbody2D;
+    private float thrust;
+    private float torque;
 
-    public void SetUp(float thrust, float torque = 0f)
+    public void Update()
     {
-        this.thrust = thrust;
-        this.torque = torque;
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        CrossOverScreenBoundaries();
     }
 
     public void FixedUpdate()
@@ -40,9 +36,11 @@ public class MovementManager: MonoBehaviour
         }
     }
 
-    public void Update()
+    public void SetUp(float thrust, float torque = 0f)
     {
-        CrossOverScreenBoundaries();
+        this.thrust = thrust;
+        this.torque = torque;
+        rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     public void SetMovement(bool forward, bool left, bool right)
@@ -75,21 +73,13 @@ public class MovementManager: MonoBehaviour
     private void CrossOverScreenBoundaries()
     {
         if (transform.position.x > ScreenManager.WorldMaxCorner.x)
-        {
             transform.position = new Vector2(ScreenManager.WorldMinCorner.x, transform.position.y);
-        }
         else if (transform.position.x < ScreenManager.WorldMinCorner.x)
-        {
             transform.position = new Vector2(ScreenManager.WorldMaxCorner.x, transform.position.y);
-        }
 
         if (transform.position.y > ScreenManager.WorldMaxCorner.y)
-        {
             transform.position = new Vector2(transform.position.x, ScreenManager.WorldMinCorner.y);
-        }
         else if (transform.position.y < ScreenManager.WorldMinCorner.y)
-        {
             transform.position = new Vector2(transform.position.x, ScreenManager.WorldMaxCorner.y);
-        }
     }
 }

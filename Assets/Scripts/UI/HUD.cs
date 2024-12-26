@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUD: MonoBehaviour
+public class HUD : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private HorizontalLayoutGroup healthBar;
@@ -11,17 +11,21 @@ public class HUD: MonoBehaviour
     [SerializeField] private TextMeshProUGUI restartPrompt;
 
     private int currentHealth;
-    private Image[] lifeIcons;
     private GameManager gameManager;
+    private Image[] lifeIcons;
+
+    private void OnDestroy()
+    {
+        gameManager.GameOver -= OnGameOver;
+        gameManager.ScoreChanged -= OnScoreChanged;
+        gameManager.HealthChanged -= OnHealthChanged;
+    }
 
     public void SetUp(GameManager manager, int maxHealth, int startingHealth)
     {
         gameManager = manager;
-        
-        foreach (Transform child in healthBar.transform)
-        {
-            Destroy(child.gameObject);
-        }
+
+        foreach (Transform child in healthBar.transform) Destroy(child.gameObject);
 
         SetUpGameOver(manager);
         SetUpScore(manager);
@@ -32,8 +36,8 @@ public class HUD: MonoBehaviour
     {
         gameManager.GameOver += OnGameOver;
         SetGameOverOverlayActive(false);
-        
-        if(restartPrompt)
+
+        if (restartPrompt)
         {
             var restartKey = InputManager.Data.restartKeys[0].ToString();
             restartPrompt.SetText($"Press {restartKey} to restart");
@@ -49,17 +53,14 @@ public class HUD: MonoBehaviour
     private void SetUpHealth(GameManager gameManager, int maxHealth, int startingHealth)
     {
         lifeIcons = new Image[maxHealth];
-        
-        for (int i = 0; i < maxHealth; i++)
+
+        for (var i = 0; i < maxHealth; i++)
         {
             var icon = Instantiate(lifeIcon, healthBar.transform);
-            if (i >= startingHealth)
-            {
-                icon.gameObject.SetActive(false);
-            }
+            if (i >= startingHealth) icon.gameObject.SetActive(false);
             lifeIcons[i] = icon;
         }
-        
+
         currentHealth = startingHealth;
         gameManager.HealthChanged += OnHealthChanged;
     }
@@ -82,26 +83,18 @@ public class HUD: MonoBehaviour
     private void SetNewHealth(int newHealth)
     {
         if (newHealth > currentHealth)
-        {
-            for (int i = currentHealth; i < newHealth; i++)
-            {
+            for (var i = currentHealth; i < newHealth; i++)
                 SetLifeIconActive(lifeIcons[i], true);
-            }
-        } 
         else if (newHealth < currentHealth)
-        {
-            for (int i = newHealth; i < currentHealth; i++)
-            {
+            for (var i = newHealth; i < currentHealth; i++)
                 SetLifeIconActive(lifeIcons[i], false);
-            }
-        }
-        
+
         currentHealth = newHealth;
     }
 
     private void SetLifeIconActive(Image icon, bool setActive)
     {
-        if(!icon) return;
+        if (!icon) return;
         icon.gameObject.SetActive(setActive);
     }
 
@@ -111,15 +104,8 @@ public class HUD: MonoBehaviour
         gameOverOverlay.gameObject.SetActive(setActive);
     }
 
-    private void OnGameOver(bool gameLost)  
+    private void OnGameOver(bool gameLost)
     {
         SetGameOverOverlayActive(gameLost);
-    }
-
-    private void OnDestroy()
-    {
-        gameManager.GameOver -= OnGameOver;
-        gameManager.ScoreChanged -= OnScoreChanged;
-        gameManager.HealthChanged -= OnHealthChanged;
     }
 }

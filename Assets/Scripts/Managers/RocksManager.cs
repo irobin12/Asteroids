@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Data;
-using Entities;
 using UnityEngine;
 
-public class RocksManager: MonoBehaviour
+public class RocksManager : MonoBehaviour
 {
-    public Action<int> OnScoreChanged;
-    public Action<Rock> OnRockCollected;
-    private Dictionary<int, RockSpawner> spawnerByRockDataId;
     private LevelData levelData;
+    public Action<Rock> OnRockCollected;
+    public Action<int> OnScoreChanged;
+    private Dictionary<int, RockSpawner> spawnerByRockDataId;
 
     public void SetUp(LevelData data)
     {
@@ -20,7 +18,8 @@ public class RocksManager: MonoBehaviour
     private void CreateFirstRocks()
     {
         if (levelData.startingRockData == null) return;
-        GetOrCreateNewRockSpawner(levelData.startingRockData).SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
+        GetOrCreateNewRockSpawner(levelData.startingRockData)
+            .SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
     }
 
     public void ResetFromStart()
@@ -36,10 +35,7 @@ public class RocksManager: MonoBehaviour
 
     private void RemoveAllRocks()
     {
-        foreach (var spawner in spawnerByRockDataId)
-        {
-            spawner.Value.ReleaseAll();
-        }
+        foreach (var spawner in spawnerByRockDataId) spawner.Value.ReleaseAll();
     }
 
     private RockSpawner AddRockSpawner()
@@ -55,10 +51,7 @@ public class RocksManager: MonoBehaviour
         }
         else
         {
-            if (rock.Data.spawnedRock != null)
-            {
-                GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
-            }
+            if (rock.Data.spawnedRock != null) GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
             var addedScore = rock.Data.score;
             OnScoreChanged?.Invoke(addedScore);
         }

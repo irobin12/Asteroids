@@ -1,35 +1,34 @@
 using System;
-using Data;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 [RequireComponent(typeof(PlayerManager), typeof(RocksManager))]
-public class GameManager: MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    /// <summary>
-    /// int is the new health
-    /// </summary>
-    public Action<int> HealthChanged;    
-    
-    /// <summary>
-    /// int is the new score
-    /// </summary>
-    public Action<int> ScoreChanged;
-    
-    /// <summary>
-    /// bool is true when game was just lost, false when it restarted (to reset the HUD)
-    /// </summary>
-    public Action<bool> GameOver;
-    
     [SerializeField] private GameData gameData;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private HUD hud;
-    
-    private PlayerManager playerManager;
-    private RocksManager rocksManager;
-    
+
     private int currentHealth;
     private int currentScore;
+
+    /// <summary>
+    ///     bool is true when game was just lost, false when it restarted (to reset the HUD)
+    /// </summary>
+    public Action<bool> GameOver;
+
+    /// <summary>
+    ///     int is the new health
+    /// </summary>
+    public Action<int> HealthChanged;
+
+    private PlayerManager playerManager;
+    private RocksManager rocksManager;
+
+    /// <summary>
+    ///     int is the new score
+    /// </summary>
+    public Action<int> ScoreChanged;
 
     private void Awake()
     {
@@ -40,6 +39,34 @@ public class GameManager: MonoBehaviour
 
         playerManager = GetComponent<PlayerManager>();
         rocksManager = GetComponent<RocksManager>();
+    }
+
+    private void Start()
+    {
+        InputManager.RestartKeyPressed += RestartGame;
+
+        if (hud) hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
+
+        playerManager.SetUp(gameData.player);
+        playerManager.PlayerDeath += OnPlayerDeath;
+
+        rocksManager.SetUp(gameData.levels[0]);
+        rocksManager.OnScoreChanged += ChangeScore;
+
+        ResetUserData();
+        playerManager.SetFromStart();
+        rocksManager.SetFromStart();
+    }
+
+    private void Update()
+    {
+        InputManager.Update();
+    }
+
+    private void OnDestroy()
+    {
+        if (playerManager) playerManager.PlayerDeath -= OnPlayerDeath;
+        if (rocksManager) rocksManager.OnScoreChanged -= ChangeScore;
     }
 
     private void VerifyData()
@@ -64,27 +91,8 @@ public class GameManager: MonoBehaviour
 
     private static void VerifyKeyCodes(KeyCode[] keyCodes)
     {
-        Assert.IsTrue(keyCodes.Length > 0, "All key codes fields in the Input Data must have at least one entry assigned.");
-    }
-
-    private void Start()
-    {
-        InputManager.RestartKeyPressed += RestartGame;
-
-        if (hud)
-        {
-            hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
-        }
-        
-        playerManager.SetUp(gameData.player);
-        playerManager.PlayerDeath += OnPlayerDeath;
-        
-        rocksManager.SetUp(gameData.levels[0]);
-        rocksManager.OnScoreChanged += ChangeScore;
-        
-        ResetUserData();
-        playerManager.SetFromStart();
-        rocksManager.SetFromStart();
+        Assert.IsTrue(keyCodes.Length > 0,
+            "All key codes fields in the Input Data must have at least one entry assigned.");
     }
 
     private void ResetUserData()
@@ -105,19 +113,15 @@ public class GameManager: MonoBehaviour
     {
         TrySetHealth(currentHealth - 1);
         if (currentHealth <= 0)
-        {
             GameOver?.Invoke(true);
-        }
         else
-        {
             StartCoroutine(playerManager.RespawnPlayer());
-        }
     }
 
     private void TrySetHealth(int newHealth)
     {
         if (newHealth == currentHealth || newHealth > gameData.maxHealth) return;
-        
+
         currentHealth = newHealth;
         HealthChanged?.Invoke(currentHealth);
     }
@@ -127,7 +131,7 @@ public class GameManager: MonoBehaviour
         var previousScore = currentScore;
         currentScore += scoreAdded;
         TryAddBonusLife(previousScore);
-        
+
         SetScoreAt(currentScore);
     }
 
@@ -137,7 +141,8 @@ public class GameManager: MonoBehaviour
     }
 
     /// <summary>
-    /// Test if the player has reached a new threshold for getting a bonus life, and give one more health if that is the case.
+    ///     Test if the player has reached a new threshold for getting a bonus life, and give one more health if that is the
+    ///     case.
     /// </summary>
     private void TryAddBonusLife(int previousScore)
     {
@@ -145,21 +150,7 @@ public class GameManager: MonoBehaviour
         if (currentScoreMultipleForBonus >= 1)
         {
             var previousScoreMultipleForBonus = previousScore / gameData.scorePerBonusLife;
-            if (previousScoreMultipleForBonus < currentScoreMultipleForBonus)
-            {
-                TrySetHealth(currentHealth + 1);
-            }
+            if (previousScoreMultipleForBonus < currentScoreMultipleForBonus) TrySetHealth(currentHealth + 1);
         }
-    }
-
-    private void Update()
-    {
-        InputManager.Update();
-    }
-
-    private void OnDestroy()
-    {
-        if(playerManager) playerManager.PlayerDeath -= OnPlayerDeath;
-        if(rocksManager) rocksManager.OnScoreChanged -= ChangeScore;
     }
 }

@@ -1,28 +1,25 @@
 using System;
-using System.Collections.Generic;
-using Data;
-using Entities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class RockSpawner : EntitySpawner<Rock>
 {
     public Action<Rock> RockDestroyed;
-    
+
     public void SpawnFirstRocks(int rocksToSpawn, RockData rockData)
     {
-        for (int i = 0; i < rocksToSpawn; i++)
+        for (var i = 0; i < rocksToSpawn; i++)
         {
             var randomPosition = CreateRandomRockPosition(Random.Range(0, 4));
             var randomRotation = Random.Range(0f, 360f);
-            
+
             SpawnRock(randomPosition, Quaternion.Euler(0, 0, randomRotation), rockData);
         }
     }
 
     /// <summary>
-    /// Randomly pick between top, bottom, left or right border.
-    /// The game being played in landscape, top and bottom should be weighted against left and right.
+    ///     Randomly pick between top, bottom, left or right border.
+    ///     The game being played in landscape, top and bottom should be weighted against left and right.
     /// </summary>
     /// <param name="border">0 = top, 1 = bottom, 2 = left, 3 = right</param>
     /// <returns></returns>
@@ -82,17 +79,18 @@ public class RockSpawner : EntitySpawner<Rock>
         var parentRotation = parentRock.transform.rotation;
 
         var angleDeviation = parentRock.Data.maxSpawnAngleDeviation;
-        
-        for (int i = 0; i < parentRock.Data.spawnedRocksAmount; i++)
+
+        for (var i = 0; i < parentRock.Data.spawnedRocksAmount; i++)
         {
             var minAngleDeviation = parentRotation.z + parentRock.Data.minSpawnAngleDeviation;
             var childNewAngle = Random.Range(minAngleDeviation - angleDeviation, minAngleDeviation + angleDeviation);
             var childRotation = parentRotation * Quaternion.Euler(0, 0, childNewAngle);
 
-            var velocityMultiplier = Random.Range(parentRock.Data.minVelocityMultiplier, parentRock.Data.maxVelocityMultiplier);
+            var velocityMultiplier =
+                Random.Range(parentRock.Data.minVelocityMultiplier, parentRock.Data.maxVelocityMultiplier);
             var newRockData = childRockData;
             newRockData.launchVelocity = parentRock.Data.launchVelocity * velocityMultiplier;
-            
+
             SpawnRock(parentPosition, childRotation, newRockData);
         }
     }

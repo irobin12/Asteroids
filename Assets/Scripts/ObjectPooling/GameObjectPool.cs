@@ -1,5 +1,4 @@
 using System;
-using Data;
 using UnityEngine;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
@@ -11,17 +10,17 @@ public interface IPoolable
 
 public class GameObjectPool<T> where T : MonoBehaviour, IPoolable
 {
-    public Action ReleaseAll;
-    private readonly ObjectPool<T> pool;
     private readonly EntityData entityData;
     private readonly T objectToPool;
     private readonly Transform parent;
-    
+    private readonly ObjectPool<T> pool;
+    public Action ReleaseAll;
+
     public GameObjectPool(T prefab, int defaultSize = 5, int maxSize = 20)
     {
         objectToPool = prefab;
         parent = new GameObject($"{prefab.name}Pool").transform;
-        
+
         pool = new ObjectPool<T>(
             CreatePooledObject,
             OnGetFromPool,
@@ -30,22 +29,22 @@ public class GameObjectPool<T> where T : MonoBehaviour, IPoolable
             true,
             defaultSize,
             maxSize
-            );
+        );
     }
-    
+
     private T CreatePooledObject()
     {
         var pooledObject = Object.Instantiate(objectToPool, parent);
         ReleaseAll += pooledObject.Release;
         return pooledObject;
     }
-    
+
     public T GetObject(Vector3 position, Quaternion rotation)
     {
         var pooledObject = pool.Get();
         pooledObject.transform.position = position;
         pooledObject.transform.rotation = rotation;
-        
+
         return pooledObject;
     }
 

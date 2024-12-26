@@ -1,61 +1,52 @@
 using System;
-using Data;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Entities
+[RequireComponent(typeof(MovementManager), typeof(Collider2D))]
+public class Projectile : MonoBehaviour, IEntity<ProjectileData>, IDestroyable, IPoolable
 {
-    [RequireComponent(typeof(MovementManager), typeof(Collider2D))]
-    public class Projectile: MonoBehaviour, IEntity<ProjectileData>, IDestroyable, IPoolable
+    private ProjectileData data;
+    private float lifetime;
+    private MovementManager movementManager;
+    private ObjectPool<Projectile> pool;
+    public Action<Projectile> Released;
+    private float timeSinceSpawned;
+
+    private void Update()
     {
-        public Action<Projectile> Released;
-        
-        private ProjectileData data;
-        private MovementManager movementManager;
-        private ObjectPool<Projectile> pool;
-        private float lifetime;
-        private float timeSinceSpawned;
+        movementManager.Update();
 
-        public void SetUp(ProjectileData projectileData)
-        { 
-            data = projectileData;
-            lifetime = data.lifetime;
-            movementManager = GetComponent<MovementManager>();
-            movementManager.SetUp(projectileData.launchVelocity, projectileData.rotationSpeed);
-            movementManager.SetMovement(true, false, false);
-        }
+        if (timeSinceSpawned < lifetime)
+            timeSinceSpawned += Time.deltaTime;
+        else
+            Destroy();
+    }
 
-        public void SetFromStart()
-        {
-            timeSinceSpawned = 0f;
-        }
+    /// <summary>
+    ///     Called upon collision or at end of lifetime.
+    /// </summary>
+    public void Destroy()
+    {
+        // Release to pool
+        Released?.Invoke(this);
+    }
 
-        private void Update()
-        {
-            movementManager.Update();
-         
-            if (timeSinceSpawned < lifetime)
-            {
-                timeSinceSpawned += Time.deltaTime;
-            }
-            else
-            {
-                Destroy();
-            }
-        }
+    public void SetUp(ProjectileData projectileData)
+    {
+        data = projectileData;
+        lifetime = data.lifetime;
+        movementManager = GetComponent<MovementManager>();
+        movementManager.SetUp(projectileData.launchVelocity);
+        movementManager.SetMovement(true, false, false);
+    }
 
-        /// <summary>
-        /// Called upon collision or at end of lifetime.
-        /// </summary>
-        public void Destroy()
-        {
-            // Release to pool
-            Released?.Invoke(this);
-        }
+    public void SetFromStart()
+    {
+        timeSinceSpawned = 0f;
+    }
 
-        public void Release()
-        {
-            Released?.Invoke(this);
-        }
+    public void Release()
+    {
+        Released?.Invoke(this);
     }
 }

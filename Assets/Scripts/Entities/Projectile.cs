@@ -6,9 +6,10 @@ using UnityEngine.Pool;
 namespace Entities
 {
     [RequireComponent(typeof(MovementManager), typeof(Collider2D))]
-    public class Projectile: MonoBehaviour, IEntity<ProjectileData>, IDestroyable
+    public class Projectile: MonoBehaviour, IEntity<ProjectileData>, IDestroyable, IPoolable
     {
-        public Action<Projectile> Destroyed;
+        public Action<Projectile> Released;
+        
         private ProjectileData data;
         private MovementManager movementManager;
         private ObjectPool<Projectile> pool;
@@ -24,7 +25,7 @@ namespace Entities
             movementManager.SetMovement(true, false, false);
         }
 
-        public void Reset()
+        public void SetFromStart()
         {
             timeSinceSpawned = 0f;
         }
@@ -49,7 +50,12 @@ namespace Entities
         public void Destroy()
         {
             // Release to pool
-            Destroyed?.Invoke(this);
+            Released?.Invoke(this);
+        }
+
+        public void Release()
+        {
+            Released?.Invoke(this);
         }
     }
 }

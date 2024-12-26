@@ -5,9 +5,10 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(MovementManager))]
-    public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable
+    public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
     {
         public Action<Rock> Destroyed;
+        public Action<Rock> Released;
 
         public RockData Data { get; private set; }
         private MovementManager movementManager;
@@ -20,7 +21,7 @@ namespace Entities
             movementManager.SetMovement(true, false, false);
         }
 
-        public void Reset() { }
+        public void SetFromStart() { }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -38,6 +39,11 @@ namespace Entities
         public void Destroy()
         {
             Destroyed?.Invoke(this);
+        }
+
+        public void Release()
+        {
+            Released?.Invoke(this);
         }
     }
 }

@@ -23,17 +23,22 @@ public class RocksManager: MonoBehaviour
         GetOrCreateNewRockSpawner(levelData.startingRockData).SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
     }
 
-    public void SetFromStart()
+    public void ResetFromStart()
     {
         RemoveAllRocks();
+        SetFromStart();
+    }
+
+    public void SetFromStart()
+    {
         CreateFirstRocks();
     }
-    
+
     private void RemoveAllRocks()
     {
         foreach (var spawner in spawnerByRockDataId)
         {
-            // spawner.Value.ReleaseAll();
+            spawner.Value.ReleaseAll();
         }
     }
 
@@ -75,6 +80,6 @@ public class RocksManager: MonoBehaviour
     private void SetUpSpawner(Rock rockToSpawn, RockSpawner rockSpawner)
     {
         rockSpawner.SetUp(rockToSpawn, 5, 50);
-        rockSpawner.OnRockDestroyed += OnRockDestroyed;
+        rockSpawner.RockDestroyed += OnRockDestroyed;
     }
 }

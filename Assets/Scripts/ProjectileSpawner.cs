@@ -21,7 +21,7 @@ public class ProjectileSpawner : EntitySpawner<Projectile>
         if (timeSinceLastSpawn < projectileData.cooldown) return;
 
         var projectile = Pool.GetObject(spawnPoint.position, spawnPoint.rotation);
-        projectile.Destroyed += ReleaseProjectile;
+        projectile.Released += ReleaseProjectile;
         projectile.SetUp(projectileData);
         
         timeSinceLastSpawn = 0;
@@ -29,8 +29,8 @@ public class ProjectileSpawner : EntitySpawner<Projectile>
 
     private void ReleaseProjectile(Projectile projectile)
     {
-        projectile.Destroyed -= ReleaseProjectile;
-        projectile.Reset();
+        projectile.Released -= ReleaseProjectile;
+        projectile.SetFromStart();
         Pool.ReleaseGameObject(projectile);
     }
 

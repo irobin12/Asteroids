@@ -100,7 +100,7 @@ namespace Entities
             Destroy();
         }
 
-        public void Reset()
+        public void SetFromStart()
         {
             isAlreadyDestroyed = false;
             transform.position = Vector3.zero;

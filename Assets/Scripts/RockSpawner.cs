@@ -7,8 +7,7 @@ using Random = UnityEngine.Random;
 
 public class RockSpawner : EntitySpawner<Rock>
 {
-    public Action<Rock> OnRockDestroyed;
-    private List<GameObjectPool<Rock>> childRocksPools;
+    public Action<Rock> RockDestroyed;
     
     public void SpawnFirstRocks(int rocksToSpawn, RockData rockData)
     {
@@ -52,25 +51,36 @@ public class RockSpawner : EntitySpawner<Rock>
     private Rock SpawnRock(Vector3 position, Quaternion rotation, RockData data)
     {
         var rock = Pool.GetObject(position, rotation);
-        rock.Destroyed += ReleaseRock;
+        rock.Destroyed += OnRockDestroyed;
+        rock.Released += OnRockReleased;
         rock.SetUp(data);
         return rock;
     }
 
-    private void ReleaseRock(Rock rock)
+    private void OnRockReleased(Rock rock)
     {
-        rock.Destroyed -= ReleaseRock;
-        Pool.ReleaseGameObject(rock);
-        OnRockDestroyed?.Invoke(rock);
+        ReleaseRock(rock);
+    }
+
+    private void OnRockDestroyed(Rock rock)
+    {
+        ReleaseRock(rock);
+        RockDestroyed?.Invoke(rock);
 
         // if (rock.Data.spawnedRock != null)
         // {
         //     SetUpChildPool(rock);
         //     // SpawnChildRocks(rock);
         // }
-            
     }
-    
+
+    private void ReleaseRock(Rock rock)
+    {
+        rock.Destroyed -= OnRockDestroyed;
+        rock.Released -= OnRockReleased;
+        Pool.ReleaseGameObject(rock);
+    }
+
     // private void SetUpChildPool(Rock parentRock, int defaultSize = 5, int maxSize = 15)
     // {
     //     var prefab = parentRock.Data.spawnedRock.prefab;

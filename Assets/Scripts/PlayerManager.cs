@@ -55,13 +55,17 @@ public class PlayerManager: MonoBehaviour
         }
     }
 
-    public void ResetPlayer()
+    public void ResetPlayerFromStart()
     {
-        // player.ProjectileSpawner.ReleaseAll();
-        player.gameObject.SetActive(false);
-        player.Reset();
+        player.ProjectileSpawner.ReleaseAll();
+        SetFromStart();
     }
-    
+
+    public void SetFromStart()
+    {
+        player.SetFromStart();
+    }
+
     public IEnumerator RespawnPlayer()
     {
         yield return new WaitForSeconds(playerData.respawnTime);
@@ -71,7 +75,7 @@ public class PlayerManager: MonoBehaviour
             yield return null;
         }
         
-        player.Reset();
+        SetFromStart();
     }
 
     private void OnPlayerDeath()

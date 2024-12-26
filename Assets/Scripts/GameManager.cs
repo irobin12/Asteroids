@@ -1,6 +1,7 @@
 using System;
 using Data;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [RequireComponent(typeof(PlayerManager), typeof(RocksManager))]
 public class GameManager: MonoBehaviour
@@ -15,11 +16,15 @@ public class GameManager: MonoBehaviour
     /// </summary>
     public Action<int> ScoreChanged;
     
+    /// <summary>
+    /// bool is true when game was just lost, false when it restarted (to reset the HUD)
+    /// </summary>
+    public Action<bool> GameOver;
+    
     [SerializeField] private GameData gameData;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private HUD hud;
     
-    private DataValidator dataValidator;
     private PlayerManager playerManager;
     private RocksManager rocksManager;
     
@@ -28,8 +33,7 @@ public class GameManager: MonoBehaviour
 
     private void Awake()
     {
-        dataValidator = new DataValidator(gameData);
-        dataValidator.VerifyData();
+        VerifyData();
 
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
         InputManager.SetUp(gameData.inputData);
@@ -38,11 +42,39 @@ public class GameManager: MonoBehaviour
         rocksManager = GetComponent<RocksManager>();
     }
 
+    private void VerifyData()
+    {
+        Assert.IsNotNull(gameData, "Game Data is null, ensure there is one assigned in the Game Manager.");
+        Assert.IsNotNull(mainCamera, "No main camera assigned, ensure it is present in the Game Manager.");
+        Assert.IsNotNull(hud, "No HUD assigned, ensure it is present in the Game Manager.");
+
+        Assert.IsTrue(gameData.startingHealth >= 1,
+            "You cannot play the game with less than 1 health! Please put a higher value in the starting health field of Game Data.");
+        Assert.IsTrue(gameData.maxHealth >= gameData.startingHealth,
+            "Max health cannot be inferior to starting health! Check your values in the Game Data file.");
+        Assert.IsTrue(gameData.levels.Length > 0, "There must be at least on level configured.");
+
+        VerifyKeyCodes(gameData.inputData.moveForwardKeys);
+        VerifyKeyCodes(gameData.inputData.moveLeftKeys);
+        VerifyKeyCodes(gameData.inputData.moveRightKeys);
+        VerifyKeyCodes(gameData.inputData.shootKeys);
+        VerifyKeyCodes(gameData.inputData.teleportationKeys);
+        VerifyKeyCodes(gameData.inputData.restartKeys);
+    }
+
+    private static void VerifyKeyCodes(KeyCode[] keyCodes)
+    {
+        Assert.IsTrue(keyCodes.Length > 0, "All key codes fields in the Input Data must have at least one entry assigned.");
+    }
+
     private void Start()
     {
         InputManager.RestartKeyPressed += RestartGame;
-        
-        hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
+
+        if (hud)
+        {
+            hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
+        }
         
         playerManager.SetUp(gameData.player);
         playerManager.PlayerDeath += OnPlayerDeath;
@@ -50,24 +82,23 @@ public class GameManager: MonoBehaviour
         rocksManager.SetUp(gameData.levels[0]);
         rocksManager.OnScoreChanged += ChangeScore;
         
-        SetGameFromStart();
+        ResetUserData();
+        playerManager.SetFromStart();
+        rocksManager.SetFromStart();
     }
 
-    private void SetGameFromStart()
+    private void ResetUserData()
     {
-        TrySetHealth(gameData.startingHealth);
         SetScoreAt(0);
-        playerManager.ResetPlayer();
-        rocksManager.SetFromStart();
-        // Reset player
-        // Reset projectiles
-        // Reset rocks
-        // Reset enemies
+        TrySetHealth(gameData.startingHealth);
+        GameOver?.Invoke(false);
     }
 
     private void RestartGame()
     {
-        SetGameFromStart();
+        ResetUserData();
+        playerManager.ResetPlayerFromStart();
+        rocksManager.ResetFromStart();
     }
 
     private void OnPlayerDeath()
@@ -75,7 +106,7 @@ public class GameManager: MonoBehaviour
         TrySetHealth(currentHealth - 1);
         if (currentHealth <= 0)
         {
-            hud.SetGameOverTextActive(true);
+            GameOver?.Invoke(true);
         }
         else
         {

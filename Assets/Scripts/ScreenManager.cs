@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /// <summary>
 /// Assuming that the window cannot get resized once the game is launched (as is currently set in the Project Settings/PLayer).

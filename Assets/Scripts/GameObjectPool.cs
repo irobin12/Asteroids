@@ -1,9 +1,17 @@
+using System;
 using Data;
 using UnityEngine;
 using UnityEngine.Pool;
+using Object = UnityEngine.Object;
 
-public class GameObjectPool<T> where T : MonoBehaviour
+public interface IPoolable
 {
+    void Release();
+}
+
+public class GameObjectPool<T> where T : MonoBehaviour, IPoolable
+{
+    public Action ReleaseAll;
     private readonly ObjectPool<T> pool;
     private readonly EntityData entityData;
     private readonly T objectToPool;
@@ -27,8 +35,10 @@ public class GameObjectPool<T> where T : MonoBehaviour
     
     private T CreatePooledObject()
     {
-        var pooledObject = Object.Instantiate(objectToPool, parent) ;
+        var pooledObject = Object.Instantiate(objectToPool, parent);
+        // pooledObject.
         // pooledObject.SetUp(entityData);
+        ReleaseAll += pooledObject.Release;
         return pooledObject;
     }
     
@@ -59,5 +69,10 @@ public class GameObjectPool<T> where T : MonoBehaviour
     private void OnDestroyPooledObject(T pooledObject)
     {
         Object.Destroy(pooledObject);
+    }
+
+    public void ReleaseAllObjects()
+    {
+        ReleaseAll?.Invoke();
     }
 }

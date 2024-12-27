@@ -2,19 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Collider2D))]
 public class PlayerManager : MonoBehaviour
 {
+    public Action PlayerDeath;
+    public Action PlayerStarted;
+
+    private Player player;
+    private PlayerData playerData;
+    
     /// <summary>
     ///     Used to set a safe area of respawn.
     /// </summary>
     private readonly HashSet<Collider2D> collidingWith = new();
-
-    private Player player;
-    private PlayerData playerData;
-    public Action PlayerDeath;
 
     private void OnDestroy()
     {
@@ -57,16 +60,11 @@ public class PlayerManager : MonoBehaviour
 
     private void CreatePlayer()
     {
+        Assert.IsNotNull(playerData.prefab, "PlayerData needs a prefab with a Player component attached for the game to run.");
+        
         player = Instantiate(playerData.prefab);
-        if (player != null)
-        {
-            player.SetUp(playerData);
-            player.Death += OnPlayerDeath;
-        }
-        else
-        {
-            Debug.LogWarning("PlayerData needs a prefab with a Player component attached for the game to run!");
-        }
+        player.SetUp(playerData);
+        player.Death += OnPlayerDeath;
     }
 
     public void ResetPlayerFromStart()
@@ -77,6 +75,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SetFromStart()
     {
+        PlayerStarted?.Invoke();
         player.SetFromStart();
     }
 

@@ -36,8 +36,8 @@ public class Projectile : MonoBehaviour, IEntity<ProjectileData>, IDestroyable, 
         data = projectileData;
         lifetime = data.lifetime;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(projectileData.launchVelocity);
-        movementManager.SetMovement(true, false, false);
+        movementManager.SetUp(true, projectileData.launchVelocity);
+        movementManager.SetMovement(true);
     }
 
     public void SetFromStart()
@@ -47,6 +47,7 @@ public class Projectile : MonoBehaviour, IEntity<ProjectileData>, IDestroyable, 
 
     public void Release()
     {
+        movementManager.ResetVelocity();
         Released?.Invoke(this);
     }
 }

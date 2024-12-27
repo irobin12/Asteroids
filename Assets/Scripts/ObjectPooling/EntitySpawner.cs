@@ -11,6 +11,6 @@ public abstract class EntitySpawner<T> : MonoBehaviour where T : MonoBehaviour, 
 
     public void ReleaseAll()
     {
-        Pool.ReleaseAll();
+        Pool.ReleaseAll?.Invoke();
     }
 }

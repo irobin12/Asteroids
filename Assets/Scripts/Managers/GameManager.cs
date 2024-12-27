@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-[RequireComponent(typeof(PlayerManager), typeof(RocksManager))]
+[RequireComponent(typeof(PlayerManager), typeof(RocksManager), typeof(EnemiesManager))]
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameData gameData;
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     private PlayerManager playerManager;
     private RocksManager rocksManager;
+    private EnemiesManager enemiesManager;
 
     /// <summary>
     ///     int is the new score
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
 
         playerManager = GetComponent<PlayerManager>();
         rocksManager = GetComponent<RocksManager>();
+        enemiesManager = GetComponent<EnemiesManager>();
     }
 
     private void Start()
@@ -49,9 +51,13 @@ public class GameManager : MonoBehaviour
 
         playerManager.SetUp(gameData.player);
         playerManager.PlayerDeath += OnPlayerDeath;
+        playerManager.PlayerStarted += OnPlayerStarted;
 
         rocksManager.SetUp(gameData.levels[0]);
         rocksManager.OnScoreChanged += ChangeScore;
+        
+        enemiesManager.SetUp(gameData.bigEnemy, gameData.smallEnemy);
+        enemiesManager.OnScoreChanged += ChangeScore;
 
         ResetUserData();
         playerManager.SetFromStart();
@@ -66,7 +72,9 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         if (playerManager) playerManager.PlayerDeath -= OnPlayerDeath;
+        if (playerManager) playerManager.PlayerStarted -= OnPlayerStarted;
         if (rocksManager) rocksManager.OnScoreChanged -= ChangeScore;
+        if (enemiesManager) enemiesManager.OnScoreChanged -= ChangeScore;
     }
 
     private void VerifyData()
@@ -74,13 +82,17 @@ public class GameManager : MonoBehaviour
         Assert.IsNotNull(gameData, "Game Data is null, ensure there is one assigned in the Game Manager.");
         Assert.IsNotNull(mainCamera, "No main camera assigned, ensure it is present in the Game Manager.");
         Assert.IsNotNull(hud, "No HUD assigned, ensure it is present in the Game Manager.");
+        Assert.IsNotNull(gameData.bigEnemy?.prefab, "No prefab assigned for Big Enemy, ensure both are present in the Game Manager.");
+        Assert.IsNotNull(gameData.smallEnemy?.prefab, "No prefab assigned for Small Enemy, ensure both are present in the Game Manager.");
 
         Assert.IsTrue(gameData.startingHealth >= 1,
             "You cannot play the game with less than 1 health! Please put a higher value in the starting health field of Game Data.");
         Assert.IsTrue(gameData.maxHealth >= gameData.startingHealth,
             "Max health cannot be inferior to starting health! Check your values in the Game Data file.");
-        Assert.IsTrue(gameData.levels.Length > 0, "There must be at least on level configured.");
+        Assert.IsTrue(gameData.levels?.Length > 0, "There must be at least on level configured in the Game Data file.");
 
+        Assert.IsNotNull(gameData.player, "No player assigned, ensure it is present in the Game Data.");
+        Assert.IsNotNull(gameData.inputData, "No Input Data is present in the Game Manager.");
         VerifyKeyCodes(gameData.inputData.moveForwardKeys);
         VerifyKeyCodes(gameData.inputData.moveLeftKeys);
         VerifyKeyCodes(gameData.inputData.moveRightKeys);
@@ -91,8 +103,7 @@ public class GameManager : MonoBehaviour
 
     private static void VerifyKeyCodes(KeyCode[] keyCodes)
     {
-        Assert.IsTrue(keyCodes.Length > 0,
-            "All key codes fields in the Input Data must have at least one entry assigned.");
+        Assert.IsTrue(keyCodes.Length > 0, "All key codes fields in the Input Data must have at least one entry assigned.");
     }
 
     private void ResetUserData()
@@ -107,6 +118,7 @@ public class GameManager : MonoBehaviour
         ResetUserData();
         playerManager.ResetPlayerFromStart();
         rocksManager.ResetFromStart();
+        enemiesManager.ResetFromStart();
     }
 
     private void OnPlayerDeath()
@@ -116,6 +128,11 @@ public class GameManager : MonoBehaviour
             GameOver?.Invoke(true);
         else
             StartCoroutine(playerManager.RespawnPlayer());
+    }
+
+    private void OnPlayerStarted()
+    {
+        enemiesManager.ResetFromStart();
     }
 
     private void TrySetHealth(int newHealth)

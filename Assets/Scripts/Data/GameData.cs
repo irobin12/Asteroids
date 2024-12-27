@@ -5,7 +5,8 @@ public class GameData : ScriptableObject
 {
     public InputData inputData;
     public PlayerData player;
-    public Enemy enemy;
+    public EnemyData bigEnemy;
+    public EnemyData smallEnemy;
 
     [Tooltip("The number of lives the player starts the game with.")]
     public int startingHealth;

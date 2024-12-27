@@ -1,14 +1,18 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovementManager : MonoBehaviour
 {
+    public Action ScreenBoundaryCrossed;
+    
     private bool canMoveForward;
     private bool canMoveLeft;
     private bool canMoveRight;
-    private new Rigidbody2D rigidbody2D;
+    public new Rigidbody2D rigidbody2D;
     private float thrust;
     private float torque;
+    private bool allowScreenBoundaryCrossing; // Mostly to ensure enemies spawn correctly
 
     public void Update()
     {
@@ -36,14 +40,21 @@ public class MovementManager : MonoBehaviour
         }
     }
 
-    public void SetUp(float thrust, float torque = 0f)
+    public void ResetVelocity()
     {
+        rigidbody2D.velocity = Vector2.zero;
+        rigidbody2D.angularVelocity = 0f;
+    }
+
+    public void SetUp(bool allowScreenBoundaryCrossing, float thrust, float torque = 0f)
+    {
+        this.allowScreenBoundaryCrossing = allowScreenBoundaryCrossing;
         this.thrust = thrust;
         this.torque = torque;
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    public void SetMovement(bool forward, bool left, bool right)
+    public void SetMovement(bool forward, bool left = false, bool right = false)
     {
         canMoveForward = forward;
         canMoveLeft = left;
@@ -72,14 +83,39 @@ public class MovementManager : MonoBehaviour
 
     private void CrossOverScreenBoundaries()
     {
+        var reachedScreenBoundary = false;
+        
         if (transform.position.x > ScreenManager.WorldMaxCorner.x)
-            transform.position = new Vector2(ScreenManager.WorldMinCorner.x, transform.position.y);
+        {
+            CrossScreenBoundary(ScreenManager.WorldMinCorner.x, transform.position.y, out reachedScreenBoundary);
+        }
         else if (transform.position.x < ScreenManager.WorldMinCorner.x)
-            transform.position = new Vector2(ScreenManager.WorldMaxCorner.x, transform.position.y);
+        {
+            CrossScreenBoundary(ScreenManager.WorldMaxCorner.x, transform.position.y, out reachedScreenBoundary);
+        }
 
         if (transform.position.y > ScreenManager.WorldMaxCorner.y)
-            transform.position = new Vector2(transform.position.x, ScreenManager.WorldMinCorner.y);
+        {
+            CrossScreenBoundary(transform.position.x, ScreenManager.WorldMinCorner.y, out reachedScreenBoundary);
+
+        }
         else if (transform.position.y < ScreenManager.WorldMinCorner.y)
-            transform.position = new Vector2(transform.position.x, ScreenManager.WorldMaxCorner.y);
+        {
+            CrossScreenBoundary(transform.position.x, ScreenManager.WorldMaxCorner.y, out reachedScreenBoundary);
+        }
+
+        if (reachedScreenBoundary)
+        {
+            ScreenBoundaryCrossed?.Invoke();
+        }
+    }
+
+    private void CrossScreenBoundary(float x, float y, out bool reachedScreenBoundary)
+    {
+        if (allowScreenBoundaryCrossing)
+        {
+            transform.position = new Vector2(x, y);
+        }
+        reachedScreenBoundary = true;
     }
 }

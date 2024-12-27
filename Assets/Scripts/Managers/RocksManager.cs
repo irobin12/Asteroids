@@ -18,8 +18,7 @@ public class RocksManager : MonoBehaviour
     private void CreateFirstRocks()
     {
         if (levelData.startingRockData == null) return;
-        GetOrCreateNewRockSpawner(levelData.startingRockData)
-            .SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
+        GetOrCreateNewRockSpawner(levelData.startingRockData).SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
     }
 
     public void ResetFromStart()
@@ -51,9 +50,12 @@ public class RocksManager : MonoBehaviour
         }
         else
         {
-            if (rock.Data.spawnedRock != null) GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
-            var addedScore = rock.Data.score;
-            OnScoreChanged?.Invoke(addedScore);
+            if (rock.Data.spawnedRock != null)
+            {
+                GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
+            }
+            
+            OnScoreChanged?.Invoke(rock.Data.score);
         }
     }
 

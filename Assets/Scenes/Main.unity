@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 397348241}
   - component: {fileID: 397348240}
   - component: {fileID: 397348242}
+  - component: {fileID: 397348243}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -364,6 +365,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48e1e5a0a1e94040b79b0a686c253ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &397348243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397348237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0270f0dbe51740fdada7c193f9bd409b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &439310510
@@ -1027,7 +1040,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

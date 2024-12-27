@@ -5,10 +5,10 @@ using UnityEngine;
 public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
 {
     public Action<Rock> Destroyed;
-    private MovementManager movementManager;
     public Action<Rock> Released;
-
     public RockData Data { get; private set; }
+    
+    private MovementManager movementManager;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -29,8 +29,8 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
     {
         Data = data;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(Data.launchVelocity);
-        movementManager.SetMovement(true, false, false);
+        movementManager.SetUp(true, Data.launchVelocity);
+        movementManager.SetMovement(true);
     }
 
     public void SetFromStart()
@@ -39,6 +39,7 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
 
     public void Release()
     {
+        movementManager.ResetVelocity();
         Released?.Invoke(this);
     }
 }

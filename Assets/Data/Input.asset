@@ -19,4 +19,4 @@ MonoBehaviour:
   teleportationKeys: 20000000
   restartKeys: 09000000
   continuousFire: 0
-  lockFire: 0
+  lockFire: 1

@@ -52,7 +52,7 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
     {
         data = playerData;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(data.launchVelocity, data.rotationSpeed);
+        movementManager.SetUp(true, data.launchVelocity, data.rotationSpeed);
 
         ProjectileSpawner = GetComponent<ProjectileSpawner>();
         ProjectileSpawner.SetUp(data.projectileData);
@@ -67,6 +67,7 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
 
     public void SetFromStart()
     {
+        movementManager.ResetVelocity();
         isAlreadyDestroyed = false;
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;

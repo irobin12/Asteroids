@@ -83,6 +83,11 @@ public class PlayerManager : MonoBehaviour
         SetFromStart();
     }
 
+    public Vector2 GetPlayerPosition()
+    {
+        return player.transform.position;
+    }
+
     private void OnPlayerDeath()
     {
         PlayerDeath?.Invoke();

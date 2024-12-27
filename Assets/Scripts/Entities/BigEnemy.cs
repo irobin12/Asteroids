@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class BigEnemy : Enemy
 {
-    // Assuming projectile spawner initially faces forward.
-    private const int MinShootingAngle = -180;
-    private const int MaxShootingAngle = 180;
-
     private int minNegativeShootingAngle;
     private int maxNegativeShootingAngle;
     private int minPositiveShootingAngle;
     private int maxPositiveShootingAngle;
+    
+    // Assuming projectile spawner initially faces forward.
+    private const int MinShootingAngle = -180;
+    private const int MaxShootingAngle = 180;
 
     public override void SetUp(EnemyData data)
     {

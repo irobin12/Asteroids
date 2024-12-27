@@ -41,4 +41,9 @@ public class ProjectileSpawner : EntitySpawner<Projectile>
     {
         spawnPoint.rotation = rotation;
     }
+
+    public void LookAt(Vector3 position)
+    {
+        spawnPoint.transform.up = position - spawnPoint.transform.position;
+    }
 }

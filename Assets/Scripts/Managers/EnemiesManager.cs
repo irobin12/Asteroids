@@ -12,7 +12,7 @@ public class EnemiesManager : MonoBehaviour
     private SmallEnemy smallEnemy;
     bool enemyAlive;
     
-    public void SetUp(EnemyData bigEnemyData, EnemyData smallEnemyData)
+    public void SetUp(PlayerManager playerManager, EnemyData bigEnemyData, EnemyData smallEnemyData)
     {
         var big = SetUpEnemy(bigEnemyData);
         Assert.IsTrue(big is BigEnemy, "The prefab set up in the Big Enemy Data must have a BigEnemy component attached to it!");
@@ -21,6 +21,7 @@ public class EnemiesManager : MonoBehaviour
         var small = SetUpEnemy(smallEnemyData);
         Assert.IsTrue(small is SmallEnemy, "The prefab set up in the Small Enemy Data must have a SmallEnemy component attached to it!");
         smallEnemy = small as SmallEnemy;
+        smallEnemy.SetPlayerManager(playerManager);
     }
 
     private Enemy SetUpEnemy(EnemyData data)
@@ -46,13 +47,13 @@ public class EnemiesManager : MonoBehaviour
 
     private void RenewEnemy(Enemy enemy)
     {
-        DeactivateEnemy(enemy);
+        DeactivateEnemy(enemy, false);
         StartEnemySpawn();
     }
 
-    private void DeactivateEnemy(Enemy enemy)
+    private void DeactivateEnemy(Enemy enemy, bool removeProjectiles = true)
     {
-        enemy.SetActive(false);
+        enemy.SetActive(false, removeProjectiles);
         enemyAlive = false;
     }
 

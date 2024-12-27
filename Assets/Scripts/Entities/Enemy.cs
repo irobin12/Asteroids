@@ -46,16 +46,12 @@ public abstract class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         }
     }
 
-    public void SetActive(bool active)
+    public void SetActive(bool active, bool removeProjectiles = true)
     {
-        if (active)
-        {
-            gameObject.SetActive(true);
-        }
-        else
+        gameObject.SetActive(active);
+        if (!active && removeProjectiles)
         {
             ProjectileSpawner.ReleaseAll();
-            gameObject.SetActive(false);
         }
     }
 

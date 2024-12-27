@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         rocksManager.SetUp(gameData.Levels[0]);
         rocksManager.OnScoreChanged += ChangeScore;
         
-        enemiesManager.SetUp(gameData.BigEnemy, gameData.SmallEnemy);
+        enemiesManager.SetUp(playerManager, gameData.BigEnemy, gameData.SmallEnemy);
         enemiesManager.OnScoreChanged += ChangeScore;
 
         ResetUserData();

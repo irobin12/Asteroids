@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 3650582084875216516, guid: fefbe15ec4da44bd198a5600ef332799, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3a2a6d271ba2e47d695336b59f3cc24c, type: 3}
     - target: {fileID: 4396954057080560860, guid: fefbe15ec4da44bd198a5600ef332799, type: 3}
       propertyPath: m_Name
       value: Enemy_Small

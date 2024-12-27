@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b9bd6238864236ad4e300c7dc9e06c, type: 3}
   m_Name: MediumRock
   m_EditorClassIdentifier: 
-  launchVelocity: 20.878643
-  rotationSpeed: 0
-  prefab: {fileID: 1615962829292360016, guid: 3c290cf69e8c441288b026e198ba6f99, type: 3}
+  launchVelocity: 27.482538
+  prefab: {fileID: 4184038063179597177, guid: 39e525f70ba5f48b093b3799da61ecff, type: 3}
   collectable: 0
   score: 500
   spawnedRock: {fileID: 11400000, guid: 16544ebb832fc430dae39e07465e99d2, type: 2}
@@ -22,4 +21,4 @@ MonoBehaviour:
   minSpawnAngleDeviation: 10
   maxSpawnAngleDeviation: 90
   minVelocityMultiplier: 0.9
-  maxVelocityMultiplier: 1.2
+  maxVelocityMultiplier: 1.1

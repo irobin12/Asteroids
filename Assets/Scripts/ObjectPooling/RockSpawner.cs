@@ -87,6 +87,9 @@ public class RockSpawner : EntitySpawner<Rock>
             var childRotation = parentRotation * Quaternion.Euler(0, 0, childNewAngle);
 
             var velocityMultiplier = Random.Range(parentRock.Data.MinVelocityMultiplier, parentRock.Data.MaxVelocityMultiplier);
+            
+            // Not good to be editing the scriptable object.
+            // I should have structured the data in a better, more agnostic way, to be able to pass such edits without editing the project files.
             childRockData.LaunchVelocity = parentRock.Data.LaunchVelocity * velocityMultiplier;
 
             SpawnRock(parentPosition, childRotation, childRockData);

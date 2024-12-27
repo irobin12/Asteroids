@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BigEnemy : Enemy
+public class SmallEnemy : Enemy
 {
     // Assuming projectile spawner initially faces forward.
     private const int MinShootingAngle = -180;
@@ -26,6 +26,7 @@ public class BigEnemy : Enemy
     {
         CreateAndClampAngle(out var angle);
 
+        // var rotation = Quaternion.AngleAxis(AngleFacingLeft, Vector3.forward);
         var rotation = Quaternion.Euler(0, 0, angle);
         
         ProjectileSpawner.RotateSpawnPoint(rotation);

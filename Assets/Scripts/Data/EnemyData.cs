@@ -39,4 +39,8 @@ public class EnemyData : EntityData
     [Range(0, 90)] [Tooltip("Angle at which the enemy will divert from its original y position.")]
     [SerializeField] private int movementAngle = 45;
     public float MovementAngle => movementAngle;
+
+    [Range(0, 90)][Tooltip("Minimum angle from which the projectile spawner will start shooting away from its entity.")]
+    [SerializeField] private int shootingAnglePadding = 20;
+    public int ShootingAnglePadding => shootingAnglePadding;
 }

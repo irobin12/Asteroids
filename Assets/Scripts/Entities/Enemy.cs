@@ -4,13 +4,13 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
-public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
+public abstract class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 {
     public Action<Enemy> Destroyed;
     public Action<Enemy> ReachedEndOfScreen;
     
     public EnemyData Data {get; private set;}
-    private ProjectileSpawner projectileSpawner;
+    protected ProjectileSpawner ProjectileSpawner;
     private MovementManager movementManager;
     
     /// <summary>
@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
     private const int AngleFacingRight = 270;
     private const int AngleFacingLeft = 90;
 
-    public void SetUp(EnemyData data)
+    public virtual void SetUp(EnemyData data)
     {
         Data = data;
         horizontalMidPoint = (ScreenManager.WorldMaxCorner.x - math.abs(ScreenManager.WorldMinCorner.x)) / 2f;
@@ -33,8 +33,8 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         movementManager.ScreenBoundaryCrossed += OnScreenBoundaryCrossed;
         movementManager.SetUp(false, Data.LaunchVelocity);
         
-        projectileSpawner = GetComponent<ProjectileSpawner>();
-        projectileSpawner.SetUp(data.ProjectileData);
+        ProjectileSpawner = GetComponent<ProjectileSpawner>();
+        ProjectileSpawner.SetUp(data.ProjectileData);
     }
 
     private void OnScreenBoundaryCrossed()
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         }
         else
         {
-            projectileSpawner.ReleaseAll();
+            ProjectileSpawner.ReleaseAll();
             gameObject.SetActive(false);
         }
     }
@@ -107,10 +107,13 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         
         if (timeSinceLastShot >= Data.ProjectileData.Cooldown)
         {
-            projectileSpawner.SpawnProjectile();
+            RotateProjectileSpawner();
+            ProjectileSpawner.SpawnProjectile();
             timeSinceLastShot = 0f;
         }
     }
+
+    protected abstract void RotateProjectileSpawner();
 
     private void OnDestroy()
     {

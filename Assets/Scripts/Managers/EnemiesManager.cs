@@ -1,20 +1,26 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class EnemiesManager : MonoBehaviour
 {
     public Action<int> OnScoreChanged;
 
-    private Enemy bigEnemy;
-    private Enemy smallEnemy;
+    private BigEnemy bigEnemy;
+    private SmallEnemy smallEnemy;
     bool enemyAlive;
     
     public void SetUp(EnemyData bigEnemyData, EnemyData smallEnemyData)
     {
-        bigEnemy = SetUpEnemy(bigEnemyData);
-        smallEnemy = SetUpEnemy(smallEnemyData);
+        var big = SetUpEnemy(bigEnemyData);
+        Assert.IsTrue(big is BigEnemy, "The prefab set up in the Big Enemy Data must have a BigEnemy component attached to it!");
+        bigEnemy = big as BigEnemy;
+
+        var small = SetUpEnemy(smallEnemyData);
+        Assert.IsTrue(small is SmallEnemy, "The prefab set up in the Small Enemy Data must have a SmallEnemy component attached to it!");
+        smallEnemy = small as SmallEnemy;
     }
 
     private Enemy SetUpEnemy(EnemyData data)
@@ -50,14 +56,9 @@ public class EnemiesManager : MonoBehaviour
         enemyAlive = false;
     }
 
-    // public void SetFromStart()
-    // {
-    //     StartEnemySpawn();
-    // }
-
     private void StartEnemySpawn()
     {
-        var enemy = Random.Range(0, 2) == 0 ? bigEnemy : smallEnemy;
+        var enemy = Random.Range(0, 2) == 0 ? bigEnemy as Enemy : smallEnemy;
         enemy.SetFromStart();
         
         var data = enemy.Data;

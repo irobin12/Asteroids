@@ -36,4 +36,9 @@ public class ProjectileSpawner : EntitySpawner<Projectile>
         projectile.SetFromStart();
         Pool.ReleaseGameObject(projectile);
     }
+
+    public void RotateSpawnPoint(Quaternion rotation)
+    {
+        spawnPoint.rotation = rotation;
+    }
 }

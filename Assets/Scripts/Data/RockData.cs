@@ -31,24 +31,20 @@ public class RockData : EntityData
     [Tooltip("Number of rocks to spawn.")] 
     [SerializeField] private int spawnedRocksAmount = 3;
     public int SpawnedRocksAmount => spawnedRocksAmount;
-
-    [Tooltip("Min angle at which the spawned rocks will deviate from this rock.")] 
-    [Range(0, 360)]
+    
+    [Range(0, 360)][Tooltip("Min angle at which the spawned rocks will deviate from this rock.")] 
     [SerializeField] private int minSpawnAngleDeviation = 10;
     public int MinSpawnAngleDeviation => minSpawnAngleDeviation;
-
-    [Tooltip("Max angle at which the spawned rocks will deviate from this rock.")] 
-    [Range(0, 360)]
+    
+    [Range(0, 360)][Tooltip("Max angle at which the spawned rocks will deviate from this rock.")] 
     [SerializeField] private int maxSpawnAngleDeviation = 90;
     public int MaxSpawnAngleDeviation => maxSpawnAngleDeviation;
 
-    [Tooltip("Min velocity multiplier with which the spawned rocks will deviate from this rock, 1 being the same speed as the parent rock.")]
-    [Range(0.5f, 1f)]
+    [Range(0.5f, 1f)][Tooltip("Min velocity multiplier with which the spawned rocks will deviate from this rock, 1 being the same speed as the parent rock.")]
     [SerializeField] private float minVelocityMultiplier = 0.9f;
     public float MinVelocityMultiplier => minVelocityMultiplier;
 
-    [Tooltip("Max velocity multiplier with which the spawned rocks will deviate from this rock, 1 being the same speed as the parent rock.")]
-    [Range(1f, 1.5f)]
+    [Range(1f, 1.5f)][Tooltip("Max velocity multiplier with which the spawned rocks will deviate from this rock, 1 being the same speed as the parent rock.")]
     [SerializeField] private float maxVelocityMultiplier = 1.2f;
     public float MaxVelocityMultiplier => maxVelocityMultiplier;
 }

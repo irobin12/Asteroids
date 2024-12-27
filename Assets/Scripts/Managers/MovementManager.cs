@@ -9,7 +9,7 @@ public class MovementManager : MonoBehaviour
     private bool canMoveForward;
     private bool canMoveLeft;
     private bool canMoveRight;
-    public new Rigidbody2D rigidbody2D;
+    private new Rigidbody2D rigidbody2D;
     private float thrust;
     private float torque;
     private bool allowScreenBoundaryCrossing; // Mostly to ensure enemies spawn correctly

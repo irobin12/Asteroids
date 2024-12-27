@@ -57,6 +57,16 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 
     public void SetFromStart()
     {
+    } 
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Projectile"))
+        {
+            if (other.gameObject.TryGetComponent(out Projectile projectile)) projectile.Destroy();
+
+            Destroy();
+        }
     }
     
     public void Destroy()

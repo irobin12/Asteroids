@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: BigEnemy
   m_EditorClassIdentifier: 
   launchVelocity: 80
-  prefab: {fileID: 3929462497673353036, guid: fefbe15ec4da44bd198a5600ef332799, type: 3}
+  prefab: {fileID: 517680037937245670, guid: 21e7cecf2df574feca6699b62d97f96d, type: 3}
+  score: 2000
   cooldown: 5
   cooldownRandomness: 0.2
   movementAngle: 45

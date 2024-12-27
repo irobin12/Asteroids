@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
+        // TODO disable respawn of enemies, avoid resetting them after restart from death
         TrySetHealth(currentHealth - 1);
         if (currentHealth <= 0)
             GameOver?.Invoke(true);

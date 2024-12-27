@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3449e03dd84a4126b150a752493aaf8a, type: 3}
   m_Name: SmallEnemy
   m_EditorClassIdentifier: 
-  launchVelocity: 50
+  launchVelocity: 40
   prefab: {fileID: 8515077626153943967, guid: 1e25ff142cfd1450eab824cadbbba51f, type: 3}
   projectileData: {fileID: 11400000, guid: 2a623df4e944948beada73142e43c228, type: 2}
   score: 5000
   cooldown: 5
   cooldownRandomness: 0.2
   movementAngle: 45
-  shootingAnglePadding: 40
+  shootingAnglePadding: 45

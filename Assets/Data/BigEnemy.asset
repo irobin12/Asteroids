@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3449e03dd84a4126b150a752493aaf8a, type: 3}
   m_Name: BigEnemy
   m_EditorClassIdentifier: 
-  launchVelocity: 60
+  launchVelocity: 50
   prefab: {fileID: 1993284374456961072, guid: 21e7cecf2df574feca6699b62d97f96d, type: 3}
   projectileData: {fileID: 11400000, guid: d6743c31be4834f2aa655e82e178dde9, type: 2}
   score: 2000
   cooldown: 3
   cooldownRandomness: 0.2
   movementAngle: 45
-  shootingAnglePadding: 40
+  shootingAnglePadding: 45

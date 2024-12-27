@@ -52,6 +52,8 @@ public class MovementManager : MonoBehaviour
         this.thrust = thrust;
         this.torque = torque;
         rigidbody2D = GetComponent<Rigidbody2D>();
+        rigidbody2D.angularVelocity = 0f;
+        rigidbody2D.velocity = Vector2.zero;
     }
 
     public void SetMovement(bool forward, bool left = false, bool right = false)

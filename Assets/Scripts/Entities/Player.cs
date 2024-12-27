@@ -51,12 +51,12 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
     {
         data = playerData;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(true, data.launchVelocity, data.rotationSpeed);
+        movementManager.SetUp(true, data.LaunchVelocity, data.RotationSpeed);
 
         ProjectileSpawner = GetComponent<ProjectileSpawner>();
-        ProjectileSpawner.SetUp(data.projectileData);
+        ProjectileSpawner.SetUp(data.ProjectileData);
 
-        lockFire = InputManager.Data.lockFire;
+        lockFire = InputManager.LockFire;
 
         InputManager.MoveForwardKeyPressed += MoveForward;
         InputManager.MoveLeftKeyPressed += TurnLeft;

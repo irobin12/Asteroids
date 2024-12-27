@@ -33,10 +33,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        VerifyData();
+        Assert.IsNotNull(gameData, "Game Data is null, ensure there is one assigned in the Game Manager.");
+        Assert.IsNotNull(mainCamera, "No main camera assigned, ensure it is present in the Game Manager.");
+        Assert.IsNotNull(hud, "No HUD assigned, ensure it is present in the Game Manager.");
 
         ScreenManager.SetBoundariesInWorldPoint(new Vector2(Screen.width, Screen.height), mainCamera);
-        InputManager.SetUp(gameData.inputData);
+        InputManager.SetUp(gameData.Input);
 
         playerManager = GetComponent<PlayerManager>();
         rocksManager = GetComponent<RocksManager>();
@@ -47,16 +49,16 @@ public class GameManager : MonoBehaviour
     {
         InputManager.RestartKeyPressed += RestartGame;
 
-        if (hud) hud.SetUp(this, gameData.maxHealth, gameData.startingHealth);
+        if (hud) hud.SetUp(this, gameData.MaxHealth, gameData.StartingHealth);
 
-        playerManager.SetUp(gameData.player);
+        playerManager.SetUp(gameData.Player);
         playerManager.PlayerDeath += OnPlayerDeath;
         playerManager.PlayerStarted += OnPlayerStarted;
 
-        rocksManager.SetUp(gameData.levels[0]);
+        rocksManager.SetUp(gameData.Levels[0]);
         rocksManager.OnScoreChanged += ChangeScore;
         
-        enemiesManager.SetUp(gameData.bigEnemy, gameData.smallEnemy);
+        enemiesManager.SetUp(gameData.BigEnemy, gameData.SmallEnemy);
         enemiesManager.OnScoreChanged += ChangeScore;
 
         ResetUserData();
@@ -77,39 +79,10 @@ public class GameManager : MonoBehaviour
         if (enemiesManager) enemiesManager.OnScoreChanged -= ChangeScore;
     }
 
-    private void VerifyData()
-    {
-        Assert.IsNotNull(gameData, "Game Data is null, ensure there is one assigned in the Game Manager.");
-        Assert.IsNotNull(mainCamera, "No main camera assigned, ensure it is present in the Game Manager.");
-        Assert.IsNotNull(hud, "No HUD assigned, ensure it is present in the Game Manager.");
-        Assert.IsNotNull(gameData.bigEnemy?.prefab, "No prefab assigned for Big Enemy, ensure both are present in the Game Manager.");
-        Assert.IsNotNull(gameData.smallEnemy?.prefab, "No prefab assigned for Small Enemy, ensure both are present in the Game Manager.");
-        Assert.IsNotNull(gameData.player?.prefab, "No prefab assigned for Player, ensure it is present in the Game Data.");
-        Assert.IsNotNull(gameData.inputData, "No Input Data is present in the Game Manager.");
-
-        Assert.IsTrue(gameData.startingHealth >= 1,
-            "You cannot play the game with less than 1 health! Please put a higher value in the starting health field of Game Data.");
-        Assert.IsTrue(gameData.maxHealth >= gameData.startingHealth,
-            "Max health cannot be inferior to starting health! Check your values in the Game Data file.");
-        Assert.IsTrue(gameData.levels?.Length > 0, "There must be at least on level configured in the Game Data file.");
-
-        VerifyKeyCodes(gameData.inputData.moveForwardKeys);
-        VerifyKeyCodes(gameData.inputData.moveLeftKeys);
-        VerifyKeyCodes(gameData.inputData.moveRightKeys);
-        VerifyKeyCodes(gameData.inputData.shootKeys);
-        VerifyKeyCodes(gameData.inputData.teleportationKeys);
-        VerifyKeyCodes(gameData.inputData.restartKeys);
-    }
-
-    private static void VerifyKeyCodes(KeyCode[] keyCodes)
-    {
-        Assert.IsTrue(keyCodes.Length > 0, "All key codes fields in the Input Data must have at least one entry assigned.");
-    }
-
     private void ResetUserData()
     {
         SetScoreAt(0);
-        TrySetHealth(gameData.startingHealth);
+        TrySetHealth(gameData.StartingHealth);
         GameOver?.Invoke(false);
     }
 
@@ -138,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     private void TrySetHealth(int newHealth)
     {
-        if (newHealth == currentHealth || newHealth > gameData.maxHealth) return;
+        if (newHealth == currentHealth || newHealth > gameData.MaxHealth) return;
 
         currentHealth = newHealth;
         HealthChanged?.Invoke(currentHealth);
@@ -164,10 +137,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void TryAddBonusLife(int previousScore)
     {
-        var currentScoreMultipleForBonus = currentScore / gameData.scorePerBonusLife;
+        var currentScoreMultipleForBonus = currentScore / gameData.ScorePerBonusLife;
         if (currentScoreMultipleForBonus >= 1)
         {
-            var previousScoreMultipleForBonus = previousScore / gameData.scorePerBonusLife;
+            var previousScoreMultipleForBonus = previousScore / gameData.ScorePerBonusLife;
             if (previousScoreMultipleForBonus < currentScoreMultipleForBonus) TrySetHealth(currentHealth + 1);
         }
     }

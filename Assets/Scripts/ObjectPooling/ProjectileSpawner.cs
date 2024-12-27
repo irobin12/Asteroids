@@ -16,12 +16,12 @@ public class ProjectileSpawner : EntitySpawner<Projectile>
     public void SetUp(ProjectileData data, int defaultSize = 5, int maxSize = 15)
     {
         projectileData = data;
-        base.SetUp(data.prefab, defaultSize, maxSize);
+        base.SetUp(data.Prefab, defaultSize, maxSize);
     }
 
     public void SpawnProjectile()
     {
-        if (timeSinceLastSpawn < projectileData.cooldown) return;
+        if (timeSinceLastSpawn < projectileData.Cooldown) return;
 
         var projectile = Pool.GetObject(spawnPoint.position, spawnPoint.rotation);
         projectile.Released += ReleaseProjectile;

@@ -29,7 +29,7 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
     {
         Data = data;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(true, Data.launchVelocity);
+        movementManager.SetUp(true, Data.LaunchVelocity);
         movementManager.SetMovement(true);
     }
 

@@ -16,6 +16,8 @@ public class HUD : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!gameManager) return;
+        
         gameManager.GameOver -= OnGameOver;
         gameManager.ScoreChanged -= OnScoreChanged;
         gameManager.HealthChanged -= OnHealthChanged;
@@ -39,7 +41,7 @@ public class HUD : MonoBehaviour
 
         if (restartPrompt)
         {
-            var restartKey = InputManager.Data.restartKeys[0].ToString();
+            var restartKey = InputManager.RestartKeys[0].ToString();
             restartPrompt.SetText($"Press {restartKey} to restart");
         }
     }

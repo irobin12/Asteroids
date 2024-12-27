@@ -10,39 +10,55 @@ public static class InputManager
     public static Action TeleportationKeyPressed;
     public static Action RestartKeyPressed;
 
-    public static InputData Data { get; private set; }
+    private static KeyCode[] moveForwardKeys;
+    private static KeyCode[] moveLeftKeys;
+    private static KeyCode[] moveRightKeys;
+    private static KeyCode[] shootKeys;
+    private static KeyCode[] teleportationKeys;
+    public static KeyCode[] RestartKeys {get; private set;}
+
+    private static bool continuousFire;
+    public static bool LockFire { get; private set; }
 
     public static void SetUp(InputData data)
     {
-        Data = data;
+        moveForwardKeys = data.MoveForwardKeys;
+        moveLeftKeys = data.MoveLeftKeys;
+        moveRightKeys = data.MoveRightKeys;
+        shootKeys = data.ShootKeys;
+        teleportationKeys = data.TeleportationKeys;
+        RestartKeys = data.RestartKeys;
+        
+        continuousFire = data.ContinuousFire;
+        LockFire = data.LockFire;
     }
 
     public static void Update()
     {
-        foreach (var key in Data.moveForwardKeys)
+        foreach (var key in moveForwardKeys)
             if (Input.GetKey(key))
             {
                 MoveForwardKeyPressed?.Invoke();
                 break;
             }
 
-        foreach (var key in Data.moveLeftKeys)
+        foreach (var key in moveLeftKeys)
             if (Input.GetKey(key))
             {
                 MoveLeftKeyPressed?.Invoke();
                 break;
             }
 
-        foreach (var key in Data.moveRightKeys)
+        foreach (var key in moveRightKeys)
             if (Input.GetKey(key))
             {
                 MoveRightKeyPressed?.Invoke();
                 break;
             }
 
-        foreach (var key in Data.shootKeys)
+        foreach (var key in shootKeys)
         {
-            if (Data.continuousFire)
+            if (continuousFire)
             {
                 if (Input.GetKey(key)) ShootKeyPressed?.Invoke();
             }
@@ -54,14 +70,14 @@ public static class InputManager
             break;
         }
 
-        foreach (var key in Data.teleportationKeys)
+        foreach (var key in teleportationKeys)
             if (Input.GetKeyDown(key))
             {
                 TeleportationKeyPressed?.Invoke();
                 break;
             }
 
-        foreach (var key in Data.restartKeys)
+        foreach (var key in RestartKeys)
             if (Input.GetKeyDown(key))
             {
                 RestartKeyPressed?.Invoke();

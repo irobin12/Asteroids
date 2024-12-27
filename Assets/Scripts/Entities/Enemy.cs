@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,7 +10,7 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
     public Action<Enemy> ReachedEndOfScreen;
     
     public EnemyData Data {get; private set;}
-    public ProjectileSpawner ProjectileSpawner { get; private set; }
+    private ProjectileSpawner projectileSpawner;
     private MovementManager movementManager;
     
     /// <summary>
@@ -32,10 +31,10 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         
         movementManager = GetComponent<MovementManager>();
         movementManager.ScreenBoundaryCrossed += OnScreenBoundaryCrossed;
-        movementManager.SetUp(false, Data.launchVelocity);
+        movementManager.SetUp(false, Data.LaunchVelocity);
         
-        ProjectileSpawner = GetComponent<ProjectileSpawner>();
-        ProjectileSpawner.SetUp(data.projectileData);
+        projectileSpawner = GetComponent<ProjectileSpawner>();
+        projectileSpawner.SetUp(data.ProjectileData);
     }
 
     private void OnScreenBoundaryCrossed()
@@ -55,7 +54,7 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         }
         else
         {
-            ProjectileSpawner.ReleaseAll();
+            projectileSpawner.ReleaseAll();
             gameObject.SetActive(false);
         }
     }
@@ -106,15 +105,18 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
     {
         timeSinceLastShot += Time.fixedTime;
         
-        if (timeSinceLastShot >= Data.projectileData.cooldown)
+        if (timeSinceLastShot >= Data.ProjectileData.Cooldown)
         {
-            ProjectileSpawner.SpawnProjectile();
+            projectileSpawner.SpawnProjectile();
             timeSinceLastShot = 0f;
         }
     }
 
     private void OnDestroy()
     {
-        movementManager.ScreenBoundaryCrossed -= OnScreenBoundaryCrossed;
+        if (movementManager)
+        {
+            movementManager.ScreenBoundaryCrossed -= OnScreenBoundaryCrossed;
+        }
     }
 }

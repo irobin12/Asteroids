@@ -19,11 +19,6 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     private readonly HashSet<Collider2D> collidingWith = new();
 
-    private void OnDestroy()
-    {
-        player.Death -= OnPlayerDeath;
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         collidingWith.Add(other);
@@ -53,16 +48,16 @@ public class PlayerManager : MonoBehaviour
         var positionX = Random.Range(ScreenManager.WorldMinCorner.x, ScreenManager.WorldMaxCorner.x);
         var positionY = Random.Range(ScreenManager.WorldMinCorner.y, ScreenManager.WorldMaxCorner.y);
         player.transform.position = new Vector3(positionX, positionY, 0);
-        yield return new WaitForSeconds(playerData.teleportationTime);
+        yield return new WaitForSeconds(playerData.TeleportationTime);
 
         player.gameObject.SetActive(true);
     }
 
     private void CreatePlayer()
     {
-        Assert.IsNotNull(playerData.prefab, "PlayerData needs a prefab with a Player component attached for the game to run.");
+        Assert.IsNotNull(playerData.Prefab, "PlayerData needs a prefab with a Player component attached for the game to run.");
         
-        player = Instantiate(playerData.prefab);
+        player = Instantiate(playerData.Prefab);
         player.SetUp(playerData);
         player.Death += OnPlayerDeath;
     }
@@ -81,7 +76,7 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator RespawnPlayer()
     {
-        yield return new WaitForSeconds(playerData.respawnTime);
+        yield return new WaitForSeconds(playerData.RespawnTime);
 
         while (collidingWith.Count > 0) yield return null;
 
@@ -91,5 +86,13 @@ public class PlayerManager : MonoBehaviour
     private void OnPlayerDeath()
     {
         PlayerDeath?.Invoke();
+    }
+    
+    private void OnDestroy()
+    {
+        if (player)
+        {
+            player.Death -= OnPlayerDeath;
+        }
     }
 }

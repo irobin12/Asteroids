@@ -17,8 +17,8 @@ public class RocksManager : MonoBehaviour
 
     private void CreateFirstRocks()
     {
-        if (levelData.startingRockData == null) return;
-        GetOrCreateNewRockSpawner(levelData.startingRockData).SpawnFirstRocks(levelData.startingRocksToSpawn, levelData.startingRockData);
+        if (levelData.StartingRockData == null) return;
+        GetOrCreateNewRockSpawner(levelData.StartingRockData).SpawnFirstRocks(levelData.StartingRocksToSpawn, levelData.StartingRockData);
     }
 
     public void ResetFromStart()
@@ -44,18 +44,18 @@ public class RocksManager : MonoBehaviour
 
     private void OnRockDestroyed(Rock rock)
     {
-        if (rock.Data.collectable) // TODO not the best logic for this new feature
+        if (rock.Data.Collectable) // TODO not the best logic for this new feature
         {
             OnRockCollected?.Invoke(rock);
         }
         else
         {
-            if (rock.Data.spawnedRock != null)
+            if (rock.Data.SpawnedRock != null)
             {
-                GetOrCreateNewRockSpawner(rock.Data.spawnedRock).SpawnChildRocks(rock);
+                GetOrCreateNewRockSpawner(rock.Data.SpawnedRock).SpawnChildRocks(rock);
             }
             
-            OnScoreChanged?.Invoke(rock.Data.score);
+            OnScoreChanged?.Invoke(rock.Data.Score);
         }
     }
 
@@ -66,7 +66,7 @@ public class RocksManager : MonoBehaviour
         {
             rockSpawner = AddRockSpawner();
             spawnerByRockDataId[rockToSpawnId] = rockSpawner;
-            SetUpSpawner(rockToSpawn.prefab, rockSpawner);
+            SetUpSpawner(rockToSpawn.Prefab, rockSpawner);
         }
 
         return rockSpawner;

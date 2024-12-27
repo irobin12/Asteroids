@@ -19,7 +19,7 @@ public class EnemiesManager : MonoBehaviour
 
     private Enemy SetUpEnemy(EnemyData data)
     {
-        var enemy = Instantiate(data.prefab);
+        var enemy = Instantiate(data.Prefab);
         enemy.ReachedEndOfScreen += OnEnemyReachedEndOfScreen;
         enemy.Destroyed += OnEnemyDestroyed;
         enemy.SetUp(data);
@@ -34,7 +34,7 @@ public class EnemiesManager : MonoBehaviour
     
     private void OnEnemyDestroyed(Enemy enemy)
     {
-        OnScoreChanged?.Invoke(enemy.Data.score);
+        OnScoreChanged?.Invoke(enemy.Data.Score);
         RenewEnemy(enemy);
     }
 
@@ -61,7 +61,7 @@ public class EnemiesManager : MonoBehaviour
         enemy.SetFromStart();
         
         var data = enemy.Data;
-        var cooldown = Random.Range(data.cooldown * data.cooldownRandomness, data.cooldown * (1 + data.cooldownRandomness));
+        var cooldown = Random.Range(data.Cooldown * data.CooldownRandomness, data.Cooldown * (1 + data.CooldownRandomness));
         
         StartCoroutine(WaitToSpawnEnemy(enemy, cooldown));
     }
@@ -94,6 +94,8 @@ public class EnemiesManager : MonoBehaviour
 
     private void UnsubscribeEnemy(Enemy enemy)
     {
+        if(!enemy) return;
+        
         enemy.ReachedEndOfScreen -= OnEnemyReachedEndOfScreen;
         enemy.Destroyed -= OnEnemyDestroyed;
     }

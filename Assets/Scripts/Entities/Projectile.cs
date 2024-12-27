@@ -34,9 +34,9 @@ public class Projectile : MonoBehaviour, IEntity<ProjectileData>, IDestroyable, 
     public void SetUp(ProjectileData projectileData)
     {
         data = projectileData;
-        lifetime = data.lifetime;
+        lifetime = data.Lifetime;
         movementManager = GetComponent<MovementManager>();
-        movementManager.SetUp(true, projectileData.launchVelocity);
+        movementManager.SetUp(true, projectileData.LaunchVelocity);
         movementManager.SetMovement(true);
     }
 

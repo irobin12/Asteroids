@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9f9d5f0ba4c45f4a7875a8f3309e144, type: 3}
-  m_Name: EnemyProjectile
+  m_Name: SmallEnemyProjectile
   m_EditorClassIdentifier: 
-  launchVelocity: 4
+  launchVelocity: 3
   prefab: {fileID: 5735117078473317709, guid: c5e96cf60e5a947d9a730707d31d1ef4, type: 3}
-  lifetime: 0.3
-  cooldown: 0.1
+  lifetime: 0.6
+  cooldown: 0.3

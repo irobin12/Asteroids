@@ -72,26 +72,24 @@ public class RockSpawner : EntitySpawner<Rock>
 
     public void SpawnChildRocks(Rock parentRock)
     {
-        var childRockData = parentRock.Data.spawnedRock;
+        var childRockData = parentRock.Data.SpawnedRock;
         // In 2D space, z of position is always 0
         var parentPosition = parentRock.transform.position;
         // In 2D space, x and y of rotation is always 0
         var parentRotation = parentRock.transform.rotation;
 
-        var angleDeviation = parentRock.Data.maxSpawnAngleDeviation;
+        var angleDeviation = parentRock.Data.MaxSpawnAngleDeviation;
 
-        for (var i = 0; i < parentRock.Data.spawnedRocksAmount; i++)
+        for (var i = 0; i < parentRock.Data.SpawnedRocksAmount; i++)
         {
-            var minAngleDeviation = parentRotation.z + parentRock.Data.minSpawnAngleDeviation;
+            var minAngleDeviation = parentRotation.z + parentRock.Data.MinSpawnAngleDeviation;
             var childNewAngle = Random.Range(minAngleDeviation - angleDeviation, minAngleDeviation + angleDeviation);
             var childRotation = parentRotation * Quaternion.Euler(0, 0, childNewAngle);
 
-            var velocityMultiplier =
-                Random.Range(parentRock.Data.minVelocityMultiplier, parentRock.Data.maxVelocityMultiplier);
-            var newRockData = childRockData;
-            newRockData.launchVelocity = parentRock.Data.launchVelocity * velocityMultiplier;
+            var velocityMultiplier = Random.Range(parentRock.Data.MinVelocityMultiplier, parentRock.Data.MaxVelocityMultiplier);
+            childRockData.LaunchVelocity = parentRock.Data.LaunchVelocity * velocityMultiplier;
 
-            SpawnRock(parentPosition, childRotation, newRockData);
+            SpawnRock(parentPosition, childRotation, childRockData);
         }
     }
 }

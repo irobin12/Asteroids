@@ -34,7 +34,6 @@ public static class InputManager
 
     public static void Update()
     {
-        Debug.Log("Updating InputManger");
         foreach (var key in moveForwardKeys)
             if (Input.GetKey(key))
             {
@@ -45,7 +44,6 @@ public static class InputManager
         foreach (var key in moveLeftKeys)
             if (Input.GetKey(key))
             {
-                Debug.Log("MoveLeftKeyPressed");
                 MoveLeftKeyPressed?.Invoke();
                 break;
             }
@@ -63,7 +61,6 @@ public static class InputManager
             {
                 if (Input.GetKey(key))
                 {
-                    Debug.Log("ShootKeyPressed");
                     ShootKeyPressed?.Invoke();
                 }
             }

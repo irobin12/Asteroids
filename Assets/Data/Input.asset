@@ -15,8 +15,8 @@ MonoBehaviour:
   moveForwardKeys: 1101000077000000
   moveLeftKeys: 1401000061000000
   moveRightKeys: 1301000064000000
-  shootKeys: 3201000031010000
+  shootKeys: 650000003201000031010000
   teleportationKeys: 20000000
   restartKeys: 09000000
-  continuousFire: 0
+  continuousFire: 1
   lockFire: 0

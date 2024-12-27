@@ -12,6 +12,18 @@ PrefabInstance:
       propertyPath: m_ExcludeLayers.m_Bits
       value: 72
       objectReference: {fileID: 0}
+    - target: {fileID: 3708202278772759776, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708202278772759776, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3708202278772759776, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6469772079060731673, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 72
@@ -63,6 +75,14 @@ PrefabInstance:
     - target: {fileID: 7802748124550307122, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
       propertyPath: m_TagString
       value: EnemyProjectile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594780622740965971, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594780622740965971, guid: 975bcbc47f30140cbb2b2f266e5c3346, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

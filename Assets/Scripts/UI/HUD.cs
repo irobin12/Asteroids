@@ -7,22 +7,12 @@ public class HUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private HorizontalLayoutGroup healthBar;
     [SerializeField] private Image lifeIcon;
-    [SerializeField] private RectTransform gameOverOverlay;
-    [SerializeField] private TextMeshProUGUI restartPrompt;
+    [SerializeField] private GameOverOverlay gameOverOverlay;
     [SerializeField] private CollectibleCount collectibleCount;
 
     private int currentHealth;
     private GameManager gameManager;
     private Image[] lifeIcons;
-
-    private void OnDestroy()
-    {
-        if (!gameManager) return;
-        
-        gameManager.GameOver -= OnGameOver;
-        gameManager.ScoreChanged -= OnScoreChanged;
-        gameManager.HealthChanged -= OnHealthChanged;
-    }
 
     public void SetUp(GameManager manager, int maxHealth, int startingHealth, int winningCollectiblesCount)
     {
@@ -41,13 +31,12 @@ public class HUD : MonoBehaviour
 
     private void SetUpGameOver(GameManager gameManager)
     {
-        gameManager.GameOver += OnGameOver;
         SetGameOverOverlayActive(false);
-
-        if (restartPrompt)
+        gameManager.GameOver += OnGameOver;
+        
+        if (gameOverOverlay)
         {
-            var restartKey = InputManager.RestartKeys[0].ToString();
-            restartPrompt.SetText($"Press {restartKey} to restart");
+            gameOverOverlay.SetUp();
         }
     }
 
@@ -102,17 +91,37 @@ public class HUD : MonoBehaviour
     private void SetLifeIconActive(Image icon, bool setActive)
     {
         if (!icon) return;
+        
         icon.gameObject.SetActive(setActive);
     }
 
     private void SetGameOverOverlayActive(bool setActive)
     {
         if (!gameOverOverlay) return;
+        
         gameOverOverlay.gameObject.SetActive(setActive);
     }
 
-    private void OnGameOver(bool gameLost)
+    private void OnGameOver(bool gameWon)
     {
-        SetGameOverOverlayActive(gameLost);
+        SetGameOverOverlayActive(true);
+        if (gameOverOverlay)
+        {
+            gameOverOverlay.SetWinOrLoseText(gameWon);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (!gameManager) return;
+        
+        gameManager.GameOver -= OnGameOver;
+        gameManager.ScoreChanged -= OnScoreChanged;
+        gameManager.HealthChanged -= OnHealthChanged;
+    }
+
+    public void Reset()
+    {
+        SetGameOverOverlayActive(false);
     }
 }

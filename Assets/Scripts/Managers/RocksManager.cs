@@ -5,8 +5,8 @@ using UnityEngine;
 public class RocksManager : MonoBehaviour
 {
     private LevelData levelData;
-    public Action<Rock> OnRockCollected;
-    public Action<int> OnScoreChanged;
+    public Action<Rock> RockCollected;
+    public Action<int> ScoreChanged;
     private Dictionary<int, RockSpawner> spawnerByRockDataId;
 
     public void SetUp(LevelData data)
@@ -48,7 +48,7 @@ public class RocksManager : MonoBehaviour
 
             if (!rock.DestroyedByEnemy)
             {
-                OnScoreChanged?.Invoke(rock.Data.Score);
+                ScoreChanged?.Invoke(rock.Data.Score);
             }
         }
     }
@@ -70,7 +70,7 @@ public class RocksManager : MonoBehaviour
     {
         rockSpawner.SetUp(rockToSpawn, 5, 50);
         rockSpawner.RockDestroyed += OnRockDestroyed;
-        rockSpawner.RockCollected += OnRockCollected;
+        rockSpawner.RockCollected += RockCollected;
     }
 
     private void RemoveAllRocks()
@@ -79,17 +79,5 @@ public class RocksManager : MonoBehaviour
         {
             spawner.Value.ReleaseAll();
         }
-    }
-
-    private void OnDestroy()
-    {
-        foreach (var spawner in spawnerByRockDataId)
-        {
-            spawner.Value.ReleaseAll();
-            spawner.Value.RockDestroyed -= OnRockDestroyed;
-            spawner.Value.RockCollected -= OnRockCollected;
-        }
-        
-        spawnerByRockDataId.Clear();
     }
 }

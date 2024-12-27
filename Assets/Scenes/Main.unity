@@ -623,6 +623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 621390502}
+  - component: {fileID: 621390503}
   m_Layer: 5
   m_Name: GameOverOverlay
   m_TagString: Untagged
@@ -651,6 +652,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &621390503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621390501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c1b709aeb44e63b547075af3221417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  winOrLoseText: {fileID: 1352402049}
+  restartPrompt: {fileID: 13893813}
 --- !u!1 &923773298
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,8 +721,7 @@ MonoBehaviour:
   scoreText: {fileID: 1358691561}
   healthBar: {fileID: 1800279035}
   lifeIcon: {fileID: 3191798220391958068, guid: 652aa6adc1ded466aa6dbf03628bc734, type: 3}
-  gameOverOverlay: {fileID: 621390502}
-  restartPrompt: {fileID: 13893813}
+  gameOverOverlay: {fileID: 621390503}
   collectibleCount: {fileID: 1180369686}
 --- !u!1 &1180369684
 GameObject:
@@ -908,7 +922,7 @@ GameObject:
   - component: {fileID: 1352402050}
   - component: {fileID: 1352402049}
   m_Layer: 5
-  m_Name: GameOver
+  m_Name: WinOrLoseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

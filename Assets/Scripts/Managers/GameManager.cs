@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private int currentCollectiblesCount;
 
     /// <summary>
-    ///     bool is true when game was just lost, false when it restarted (to reset the HUD)
+    ///     bool is true if the game was won, false if lost
     /// </summary>
     public Action<bool> GameOver;
 
@@ -65,18 +65,18 @@ public class GameManager : MonoBehaviour
         playerManager.PlayerStarted += OnPlayerStarted;
 
         rocksManager.SetUp(gameData.Levels[0]);
-        rocksManager.OnScoreChanged += ChangeScore;
-        rocksManager.OnRockCollected += AddCollectible;
+        rocksManager.ScoreChanged += OnScoreChanged;
+        rocksManager.RockCollected += OnRockCollected;
         
         enemiesManager.SetUp(playerManager, gameData.BigEnemy, gameData.SmallEnemy);
-        enemiesManager.OnScoreChanged += ChangeScore;
+        enemiesManager.ScoreChanged += OnScoreChanged;
 
         ResetUserData();
         playerManager.SetFromStart();
         rocksManager.SetFromStart();
     }
 
-    private void AddCollectible(Rock rock)
+    private void OnRockCollected(Rock rock)
     {
         SetCollectibleCount(currentCollectiblesCount + 1);
     }
@@ -85,6 +85,11 @@ public class GameManager : MonoBehaviour
     {
         currentCollectiblesCount = collectibleCount;
         CollectiblesCountChanged?.Invoke(currentCollectiblesCount);
+        
+        if (currentCollectiblesCount == gameData.WinningCollectibleCount)
+        {
+            GameOver?.Invoke(true);
+        }
     }
 
     private void Update()
@@ -97,8 +102,8 @@ public class GameManager : MonoBehaviour
         InvokeScoreChanged(0);
         SetCollectibleCount(0);
         TrySetHealth(gameData.StartingHealth);
-        
-        GameOver?.Invoke(false);
+        hud.Reset();
+        // GameOver?.Invoke(false);
     }
 
     private void RestartGame()
@@ -114,7 +119,7 @@ public class GameManager : MonoBehaviour
         TrySetHealth(currentHealth - 1);
         
         if (currentHealth <= 0)
-            GameOver?.Invoke(true);
+            GameOver?.Invoke(false);
         else
             StartCoroutine(playerManager.RespawnPlayer());
     }
@@ -132,7 +137,7 @@ public class GameManager : MonoBehaviour
         HealthChanged?.Invoke(currentHealth);
     }
 
-    private void ChangeScore(int scoreAdded)
+    private void OnScoreChanged(int scoreAdded)
     {
         var previousScore = currentScore;
         currentScore += scoreAdded;
@@ -147,8 +152,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    ///     Test if the player has reached a new threshold for getting a bonus life, and give one more health if that is the
-    ///     case.
+    ///     Test if the player has reached a new threshold for getting a bonus life, and give one more health if that is the case.
     /// </summary>
     private void TryAddBonusLife(int previousScore)
     {
@@ -170,13 +174,13 @@ public class GameManager : MonoBehaviour
 
         if (enemiesManager)
         {
-            enemiesManager.OnScoreChanged -= ChangeScore;
+            enemiesManager.ScoreChanged -= OnScoreChanged;
         }
         
         if (rocksManager)
         {
-            rocksManager.OnScoreChanged -= ChangeScore;
-            rocksManager.OnRockCollected -= AddCollectible;
+            rocksManager.ScoreChanged -= OnScoreChanged;
+            rocksManager.RockCollected -= OnRockCollected;
         }
     }
 }

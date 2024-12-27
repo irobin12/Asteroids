@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class EnemiesManager : MonoBehaviour
 {
-    public Action<int> OnScoreChanged;
+    public Action<int> ScoreChanged;
 
     private BigEnemy bigEnemy;
     private SmallEnemy smallEnemy;
@@ -46,7 +46,7 @@ public class EnemiesManager : MonoBehaviour
     
     private void OnEnemyDestroyed(Enemy enemy)
     {
-        OnScoreChanged?.Invoke(enemy.Data.Score);
+        ScoreChanged?.Invoke(enemy.Data.Score);
         RenewEnemy(enemy);
     }
 

@@ -19,11 +19,11 @@ public class GameOverOverlay : MonoBehaviour
     {
         if (won)
         {
-            winOrLoseText.text = "You won!";
+            winOrLoseText.text = "You've won!";
         }
         else
         {
-            winOrLoseText.text = "You lost!";
+            winOrLoseText.text = "You've lost!";
         }
     }
 }

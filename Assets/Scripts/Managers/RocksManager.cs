@@ -32,11 +32,6 @@ public class RocksManager : MonoBehaviour
         CreateFirstRocks();
     }
 
-    private void RemoveAllRocks()
-    {
-        foreach (var spawner in spawnerByRockDataId) spawner.Value.ReleaseAll();
-    }
-
     private RockSpawner AddRockSpawner()
     {
         return gameObject.AddComponent<RockSpawner>();
@@ -44,11 +39,7 @@ public class RocksManager : MonoBehaviour
 
     private void OnRockDestroyed(Rock rock)
     {
-        if (!rock.DestroyedByEnemy && rock.Data.Collectable) // TODO not the best logic for this new feature
-        {
-            OnRockCollected?.Invoke(rock);
-        }
-        else
+        if (!rock.Data.Collectable)
         {
             if (rock.Data.SpawnedRock != null)
             {
@@ -79,5 +70,26 @@ public class RocksManager : MonoBehaviour
     {
         rockSpawner.SetUp(rockToSpawn, 5, 50);
         rockSpawner.RockDestroyed += OnRockDestroyed;
+        rockSpawner.RockCollected += OnRockCollected;
+    }
+
+    private void RemoveAllRocks()
+    {
+        foreach (var spawner in spawnerByRockDataId)
+        {
+            spawner.Value.ReleaseAll();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var spawner in spawnerByRockDataId)
+        {
+            spawner.Value.ReleaseAll();
+            spawner.Value.RockDestroyed -= OnRockDestroyed;
+            spawner.Value.RockCollected -= OnRockCollected;
+        }
+        
+        spawnerByRockDataId.Clear();
     }
 }

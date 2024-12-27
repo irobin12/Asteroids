@@ -35,7 +35,17 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy();
+        if (other.gameObject.CompareTag("Collectible"))
+        {
+            if (other.gameObject.TryGetComponent(out Rock rock))
+            {
+                rock.Collect();
+            }
+        }
+        else
+        {
+            Destroy();
+        }
     }
 
     public void Destroy()

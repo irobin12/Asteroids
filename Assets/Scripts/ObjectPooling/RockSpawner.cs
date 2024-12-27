@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 public class RockSpawner : EntitySpawner<Rock>
 {
     public Action<Rock> RockDestroyed;
+    public Action<Rock> RockCollected;
 
     public void SpawnFirstRocks(int rocksToSpawn, RockData rockData)
     {
@@ -49,7 +50,13 @@ public class RockSpawner : EntitySpawner<Rock>
         var rock = Pool.GetObject(position, rotation);
         rock.Destroyed += OnRockDestroyed;
         rock.Released += OnRockReleased;
+        rock.Collected += OnRockCollected;
         rock.SetUp(data);
+    }
+
+    private void OnRockCollected(Rock rock)
+    {
+        RockCollected?.Invoke(rock);
     }
 
     private void OnRockReleased(Rock rock)
@@ -67,6 +74,7 @@ public class RockSpawner : EntitySpawner<Rock>
     {
         rock.Destroyed -= OnRockDestroyed;
         rock.Released -= OnRockReleased;
+        rock.Collected -= OnRockCollected;
         Pool.ReleaseGameObject(rock);
     }
 

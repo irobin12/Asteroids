@@ -9,6 +9,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private Image lifeIcon;
     [SerializeField] private RectTransform gameOverOverlay;
     [SerializeField] private TextMeshProUGUI restartPrompt;
+    [SerializeField] private CollectibleCount collectibleCount;
 
     private int currentHealth;
     private GameManager gameManager;
@@ -23,7 +24,7 @@ public class HUD : MonoBehaviour
         gameManager.HealthChanged -= OnHealthChanged;
     }
 
-    public void SetUp(GameManager manager, int maxHealth, int startingHealth)
+    public void SetUp(GameManager manager, int maxHealth, int startingHealth, int winningCollectiblesCount)
     {
         gameManager = manager;
 
@@ -32,6 +33,10 @@ public class HUD : MonoBehaviour
         SetUpGameOver(manager);
         SetUpScore(manager);
         SetUpHealth(manager, maxHealth, startingHealth);
+        if (collectibleCount)
+        {
+            collectibleCount.SetUp(manager, winningCollectiblesCount);
+        }
     }
 
     private void SetUpGameOver(GameManager gameManager)

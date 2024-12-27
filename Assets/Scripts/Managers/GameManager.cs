@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     private int currentHealth;
     private int currentScore;
+    private int currentCollectiblesCount;
 
     /// <summary>
     ///     bool is true when game was just lost, false when it restarted (to reset the HUD)
@@ -22,14 +23,19 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public Action<int> HealthChanged;
 
-    private PlayerManager playerManager;
-    private RocksManager rocksManager;
-    private EnemiesManager enemiesManager;
-
     /// <summary>
     ///     int is the new score
     /// </summary>
     public Action<int> ScoreChanged;
+    
+    /// <summary>
+    ///     int is the new collectibles count
+    /// </summary>
+    public Action<int> CollectiblesCountChanged;
+
+    private PlayerManager playerManager;
+    private RocksManager rocksManager;
+    private EnemiesManager enemiesManager;
 
     private void Awake()
     {
@@ -49,7 +55,10 @@ public class GameManager : MonoBehaviour
     {
         InputManager.RestartKeyPressed += RestartGame;
 
-        if (hud) hud.SetUp(this, gameData.MaxHealth, gameData.StartingHealth);
+        if (hud)
+        {
+            hud.SetUp(this, gameData.MaxHealth, gameData.StartingHealth, gameData.WinningCollectibleCount);
+        }
 
         playerManager.SetUp(gameData.Player);
         playerManager.PlayerDeath += OnPlayerDeath;
@@ -57,6 +66,7 @@ public class GameManager : MonoBehaviour
 
         rocksManager.SetUp(gameData.Levels[0]);
         rocksManager.OnScoreChanged += ChangeScore;
+        rocksManager.OnRockCollected += AddCollectible;
         
         enemiesManager.SetUp(playerManager, gameData.BigEnemy, gameData.SmallEnemy);
         enemiesManager.OnScoreChanged += ChangeScore;
@@ -66,23 +76,28 @@ public class GameManager : MonoBehaviour
         rocksManager.SetFromStart();
     }
 
+    private void AddCollectible(Rock rock)
+    {
+        SetCollectibleCount(currentCollectiblesCount + 1);
+    }
+
+    private void SetCollectibleCount(int collectibleCount)
+    {
+        currentCollectiblesCount = collectibleCount;
+        CollectiblesCountChanged?.Invoke(currentCollectiblesCount);
+    }
+
     private void Update()
     {
         InputManager.Update();
     }
 
-    private void OnDestroy()
-    {
-        if (playerManager) playerManager.PlayerDeath -= OnPlayerDeath;
-        if (playerManager) playerManager.PlayerStarted -= OnPlayerStarted;
-        if (rocksManager) rocksManager.OnScoreChanged -= ChangeScore;
-        if (enemiesManager) enemiesManager.OnScoreChanged -= ChangeScore;
-    }
-
     private void ResetUserData()
     {
-        SetScoreAt(0);
+        InvokeScoreChanged(0);
+        SetCollectibleCount(0);
         TrySetHealth(gameData.StartingHealth);
+        
         GameOver?.Invoke(false);
     }
 
@@ -123,10 +138,10 @@ public class GameManager : MonoBehaviour
         currentScore += scoreAdded;
         TryAddBonusLife(previousScore);
 
-        SetScoreAt(currentScore);
+        InvokeScoreChanged(currentScore);
     }
 
-    private void SetScoreAt(int score)
+    private void InvokeScoreChanged(int score)
     {
         ScoreChanged?.Invoke(score);
     }
@@ -142,6 +157,26 @@ public class GameManager : MonoBehaviour
         {
             var previousScoreMultipleForBonus = previousScore / gameData.ScorePerBonusLife;
             if (previousScoreMultipleForBonus < currentScoreMultipleForBonus) TrySetHealth(currentHealth + 1);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (playerManager)
+        {
+            playerManager.PlayerDeath -= OnPlayerDeath;
+            playerManager.PlayerStarted -= OnPlayerStarted;
+        }
+
+        if (enemiesManager)
+        {
+            enemiesManager.OnScoreChanged -= ChangeScore;
+        }
+        
+        if (rocksManager)
+        {
+            rocksManager.OnScoreChanged -= ChangeScore;
+            rocksManager.OnRockCollected -= AddCollectible;
         }
     }
 }

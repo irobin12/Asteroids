@@ -42,6 +42,8 @@ public class MovementManager : MonoBehaviour
 
     public void ResetVelocity()
     {
+        if(!rigidbody2D) return;
+        
         rigidbody2D.velocity = Vector2.zero;
         rigidbody2D.angularVelocity = 0f;
     }

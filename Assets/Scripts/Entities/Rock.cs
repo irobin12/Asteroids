@@ -6,6 +6,7 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
 {
     public Action<Rock> Destroyed;
     public Action<Rock> Released;
+    public Action<Rock> Collected;
     public RockData Data { get; private set; }
     public bool DestroyedByEnemy  { get; private set; }
     
@@ -42,19 +43,29 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
     public void SetUp(RockData data)
     {
         Data = data;
+
+        if (Data.Collectable)
+        {
+            tag = "Collectible";
+        }
+        
         movementManager = GetComponent<MovementManager>();
         movementManager.SetUp(true, Data.LaunchVelocity);
         movementManager.SetMovement(true);
     }
 
-    public void SetFromStart()
-    {
-    }
+    public void SetFromStart() { }
 
     public void Release()
     {
         DestroyedByEnemy = false;
         movementManager.ResetVelocity();
+        Released?.Invoke(this);
+    }
+
+    public void Collect()
+    {
+        Collected?.Invoke(this);
         Released?.Invoke(this);
     }
 }

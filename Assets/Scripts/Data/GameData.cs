@@ -43,17 +43,14 @@ public class GameData : ScriptableObject
             return smallEnemy;
         }
     }
+    
+    [Tooltip("How much collectables the player needs to gather to win the game.")]
+    [Min(1)][SerializeField] private int winningCollectibleCount = 6;
+    public int WinningCollectibleCount => winningCollectibleCount;
 
     [Tooltip("The number of lives the player starts the game with.")]
-    [SerializeField] private int startingHealth;
-    public int StartingHealth
-    {
-        get
-        {
-            Assert.IsTrue(startingHealth >= 1, $"You cannot play the game with less than 1 health! Please put a higher value in the starting health field of {name} data.");
-            return startingHealth;
-        }
-    }
+    [Min(1)][SerializeField] private int startingHealth;
+    public int StartingHealth => startingHealth;
 
     [Tooltip("The maximum number of lives the player can accumulate.")]
     [SerializeField] private int maxHealth;

@@ -74,7 +74,10 @@ public abstract class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
     {
         if (other.gameObject.CompareTag("PlayerProjectile"))
         {
-            if (other.gameObject.TryGetComponent(out Projectile projectile)) projectile.Destroy();
+            if (other.gameObject.TryGetComponent(out Projectile projectile))
+            {
+                projectile.Destroy();
+            }
 
             Destroy();
         }

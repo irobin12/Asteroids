@@ -39,7 +39,7 @@ public abstract class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 
     private void OnScreenBoundaryCrossed()
     {
-        // Bit of a hack because of execution order issue, can be used to make enemy go diagonally once midway anyway
+        // Bit of a hack because of execution order issue, could also be used to make enemy go diagonally once midway
         if (crossedHorizontalMidPoint)
         {
             ReachedEndOfScreen?.Invoke(this);
@@ -72,7 +72,7 @@ public abstract class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Projectile"))
+        if (other.gameObject.CompareTag("PlayerProjectile"))
         {
             if (other.gameObject.TryGetComponent(out Projectile projectile)) projectile.Destroy();
 

@@ -62,7 +62,7 @@ public class PlayerManager : MonoBehaviour
         player.Death += OnPlayerDeath;
     }
 
-    public void ResetPlayerFromStart()
+    public void ResetFromRestart()
     {
         player.ProjectileSpawner.ReleaseAll();
         SetFromStart();
@@ -70,8 +70,8 @@ public class PlayerManager : MonoBehaviour
 
     public void SetFromStart()
     {
-        PlayerStarted?.Invoke();
         player.SetFromStart();
+        PlayerStarted?.Invoke();
     }
 
     public IEnumerator RespawnPlayer()

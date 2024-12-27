@@ -10,7 +10,7 @@ public class EnemiesManager : MonoBehaviour
 
     private BigEnemy bigEnemy;
     private SmallEnemy smallEnemy;
-    bool enemyAlive;
+    private bool enemyAlive;
     
     public void SetUp(PlayerManager playerManager, EnemyData bigEnemyData, EnemyData smallEnemyData)
     {
@@ -32,6 +32,11 @@ public class EnemiesManager : MonoBehaviour
         enemy.SetUp(data);
         enemy.SetActive(false);
         return enemy;
+    }
+
+    public void SetFromStart()
+    {
+        StartEnemySpawn();
     }
 
     private void OnEnemyReachedEndOfScreen(Enemy enemy)
@@ -65,6 +70,7 @@ public class EnemiesManager : MonoBehaviour
         var data = enemy.Data;
         var cooldown = Random.Range(data.Cooldown * data.CooldownRandomness, data.Cooldown * (1 + data.CooldownRandomness));
         
+        StopAllCoroutines();
         StartCoroutine(WaitToSpawnEnemy(enemy, cooldown));
     }
 
@@ -80,12 +86,10 @@ public class EnemiesManager : MonoBehaviour
         enemyAlive = true;
     }
 
-    public void ResetFromStart()
+    public void ResetFromRestart()
     {
-        StopAllCoroutines();
         DeactivateEnemy(bigEnemy);
         DeactivateEnemy(smallEnemy);
-        StartEnemySpawn();
     }
 
     private void OnDestroy()

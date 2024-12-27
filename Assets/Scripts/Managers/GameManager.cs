@@ -89,15 +89,15 @@ public class GameManager : MonoBehaviour
     private void RestartGame()
     {
         ResetUserData();
-        playerManager.ResetPlayerFromStart();
-        rocksManager.ResetFromStart();
-        enemiesManager.ResetFromStart();
+        playerManager.ResetFromRestart();
+        rocksManager.ResetFromRestart();
+        enemiesManager.ResetFromRestart();
     }
 
     private void OnPlayerDeath()
     {
-        // TODO disable respawn of enemies, avoid resetting them after restart from death
         TrySetHealth(currentHealth - 1);
+        
         if (currentHealth <= 0)
             GameOver?.Invoke(true);
         else
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerStarted()
     {
-        enemiesManager.ResetFromStart();
+        enemiesManager.SetFromStart();
     }
 
     private void TrySetHealth(int newHealth)

@@ -7,16 +7,30 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
     public Action<Rock> Destroyed;
     public Action<Rock> Released;
     public RockData Data { get; private set; }
+    public bool DestroyedByEnemy  { get; private set; }
     
     private MovementManager movementManager;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Projectile"))
+        if (other.gameObject.CompareTag("PlayerProjectile"))
         {
-            if (other.gameObject.TryGetComponent(out Projectile projectile)) projectile.Destroy();
-
+            TryDestroyProjectile(other);
             Destroy();
+        } 
+        else if (other.gameObject.CompareTag("EnemyProjectile"))
+        {
+            DestroyedByEnemy = true;
+            TryDestroyProjectile(other);
+            Destroy();
+        }
+    }
+
+    private static void TryDestroyProjectile(Collider2D other)
+    {
+        if (other.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            projectile.Destroy();
         }
     }
 
@@ -39,6 +53,7 @@ public class Rock : MonoBehaviour, IEntity<RockData>, IDestroyable, IPoolable
 
     public void Release()
     {
+        DestroyedByEnemy = false;
         movementManager.ResetVelocity();
         Released?.Invoke(this);
     }

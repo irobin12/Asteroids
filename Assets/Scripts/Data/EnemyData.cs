@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyData : EntityData
 {
     public Enemy prefab;
+    public ProjectileData projectileData;
 
     [Tooltip("Score gained for destroying this enemy.")]
     public int score;

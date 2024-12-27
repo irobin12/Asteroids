@@ -22,8 +22,8 @@ public class EnemiesManager : MonoBehaviour
         var enemy = Instantiate(data.prefab);
         enemy.ReachedEndOfScreen += OnEnemyReachedEndOfScreen;
         enemy.Destroyed += OnEnemyDestroyed;
-        enemy.gameObject.SetActive(false);
         enemy.SetUp(data);
+        enemy.SetActive(false);
         return enemy;
     }
 
@@ -46,7 +46,7 @@ public class EnemiesManager : MonoBehaviour
 
     private void DeactivateEnemy(Enemy enemy)
     {
-        enemy.gameObject.SetActive(false);
+        enemy.SetActive(false);
         enemyAlive = false;
     }
 
@@ -58,14 +58,13 @@ public class EnemiesManager : MonoBehaviour
     private void StartEnemySpawn()
     {
         var enemy = Random.Range(0, 2) == 0 ? bigEnemy : smallEnemy;
-        enemy.SetSpawnPosition();
+        enemy.SetFromStart();
         
         var data = enemy.Data;
         var cooldown = Random.Range(data.cooldown * data.cooldownRandomness, data.cooldown * (1 + data.cooldownRandomness));
         
         StartCoroutine(WaitToSpawnEnemy(enemy, cooldown));
     }
-    
 
     private IEnumerator WaitToSpawnEnemy(Enemy enemy, float cooldown)
     {
@@ -75,7 +74,7 @@ public class EnemiesManager : MonoBehaviour
         }
         
         yield return new WaitForSeconds(cooldown);
-        enemy.gameObject.SetActive(true);
+        enemy.SetActive(true);
         enemyAlive = true;
     }
 

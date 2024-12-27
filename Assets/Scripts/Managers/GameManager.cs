@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
         Assert.IsNotNull(hud, "No HUD assigned, ensure it is present in the Game Manager.");
         Assert.IsNotNull(gameData.bigEnemy?.prefab, "No prefab assigned for Big Enemy, ensure both are present in the Game Manager.");
         Assert.IsNotNull(gameData.smallEnemy?.prefab, "No prefab assigned for Small Enemy, ensure both are present in the Game Manager.");
+        Assert.IsNotNull(gameData.player?.prefab, "No prefab assigned for Player, ensure it is present in the Game Data.");
+        Assert.IsNotNull(gameData.inputData, "No Input Data is present in the Game Manager.");
 
         Assert.IsTrue(gameData.startingHealth >= 1,
             "You cannot play the game with less than 1 health! Please put a higher value in the starting health field of Game Data.");
@@ -91,8 +93,6 @@ public class GameManager : MonoBehaviour
             "Max health cannot be inferior to starting health! Check your values in the Game Data file.");
         Assert.IsTrue(gameData.levels?.Length > 0, "There must be at least on level configured in the Game Data file.");
 
-        Assert.IsNotNull(gameData.player, "No player assigned, ensure it is present in the Game Data.");
-        Assert.IsNotNull(gameData.inputData, "No Input Data is present in the Game Manager.");
         VerifyKeyCodes(gameData.inputData.moveForwardKeys);
         VerifyKeyCodes(gameData.inputData.moveLeftKeys);
         VerifyKeyCodes(gameData.inputData.moveRightKeys);

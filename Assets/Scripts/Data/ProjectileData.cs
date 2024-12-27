@@ -5,9 +5,9 @@ public class ProjectileData : EntityData
 {
     public Projectile prefab;
 
-    [Range(0f, 20f)] [Tooltip("Time to wait the projectile disappears after being launched?")]
+    [Range(0f, 5f)] [Tooltip("Time to wait the projectile disappears after being launched?")]
     public float lifetime = 0.5f;
 
-    [Range(0f, 20f)] [Tooltip("Time to wait before a new projectile can be launched after the last one.")]
+    [Range(0f, 5f)] [Tooltip("Time to wait before a new projectile can be launched after the last one.")]
     public float cooldown = 0.5f;
 }

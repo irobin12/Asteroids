@@ -4,21 +4,20 @@ using UnityEngine;
 [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
 public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
 {
-    [SerializeField] private Animation animationWaitingForRespawn;
-    private PlayerData data;
-
     public Action Death;
-    private bool isAlreadyDestroyed; // To avoid calling Destroyed twice if hit by two enemies simultaneously
-
-    private bool lockFire;
-
-    private bool moveForward;
-
+    
+    [SerializeField] private Animation animationWaitingForRespawn;
+    
+    public ProjectileSpawner ProjectileSpawner { get; private set; }
     private MovementManager movementManager;
+
+    private PlayerData data;
+    private bool isAlreadyDestroyed; // To avoid calling Destroyed twice if hit by two enemies simultaneously
+    private bool lockFire;
+    private bool moveForward;
     private bool shoot;
     private bool turnLeft;
     private bool turnRight;
-    public ProjectileSpawner ProjectileSpawner { get; private set; }
 
     private void FixedUpdate()
     {

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchVelocity: 60
   prefab: {fileID: 517680037937245670, guid: 1e25ff142cfd1450eab824cadbbba51f, type: 3}
+  projectileData: {fileID: 11400000, guid: 2a623df4e944948beada73142e43c228, type: 2}
   score: 5000
   cooldown: 5
   cooldownRandomness: 0.2

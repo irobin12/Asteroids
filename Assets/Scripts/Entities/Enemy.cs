@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -6,29 +7,35 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(ProjectileSpawner), typeof(MovementManager))]
 public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 {
-    private const int AngleFacingRight = 270;
-    private const int AngleFacingLeft = 90;
     public Action<Enemy> Destroyed;
     public Action<Enemy> ReachedEndOfScreen;
+    
+    public EnemyData Data {get; private set;}
+    public ProjectileSpawner ProjectileSpawner { get; private set; }
+    private MovementManager movementManager;
     
     /// <summary>
     /// Enemies spawn either on the left or the right side of the screen.
     /// </summary>
     private bool spawnedOnLeftSide;
-
-    public EnemyData Data {get; private set;}
-    private MovementManager movementManager;
-
     private float horizontalMidPoint;
-    private bool crossedHorizontalMidPoint = false;
+    private bool crossedHorizontalMidPoint;
+    private float timeSinceLastShot;
+    
+    private const int AngleFacingRight = 270;
+    private const int AngleFacingLeft = 90;
 
     public void SetUp(EnemyData data)
     {
         Data = data;
         horizontalMidPoint = (ScreenManager.WorldMaxCorner.x - math.abs(ScreenManager.WorldMinCorner.x)) / 2f;
+        
         movementManager = GetComponent<MovementManager>();
         movementManager.ScreenBoundaryCrossed += OnScreenBoundaryCrossed;
         movementManager.SetUp(false, Data.launchVelocity);
+        
+        ProjectileSpawner = GetComponent<ProjectileSpawner>();
+        ProjectileSpawner.SetUp(data.projectileData);
     }
 
     private void OnScreenBoundaryCrossed()
@@ -40,7 +47,20 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         }
     }
 
-    public void SetSpawnPosition()
+    public void SetActive(bool active)
+    {
+        if (active)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            ProjectileSpawner.ReleaseAll();
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void SetFromStart()
     {
         crossedHorizontalMidPoint = false;
         var yPosition = Random.Range(ScreenManager.WorldMinCorner.y, ScreenManager.WorldMaxCorner.y);
@@ -55,10 +75,6 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
         movementManager.SetMovement(true);
     }
 
-    public void SetFromStart()
-    {
-    } 
-    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Projectile"))
@@ -76,9 +92,24 @@ public class Enemy : MonoBehaviour, IEntity<EnemyData>, IDestroyable
 
     private void FixedUpdate()
     {
+        movementManager.FixedUpdate();
+        
         if ((spawnedOnLeftSide && transform.position.x >= horizontalMidPoint) || (!spawnedOnLeftSide && transform.position.x <= horizontalMidPoint))
         {
             crossedHorizontalMidPoint = true;
+        }
+        
+        TryShooting();
+    }
+
+    private void TryShooting()
+    {
+        timeSinceLastShot += Time.fixedTime;
+        
+        if (timeSinceLastShot >= Data.projectileData.cooldown)
+        {
+            ProjectileSpawner.SpawnProjectile();
+            timeSinceLastShot = 0f;
         }
     }
 

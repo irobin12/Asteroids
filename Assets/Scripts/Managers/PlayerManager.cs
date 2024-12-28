@@ -11,6 +11,9 @@ public class PlayerManager : MonoBehaviour
     public Action PlayerDeath;
     public Action PlayerStarted;
 
+    [SerializeField] private ParticleSystem vfxOnDeathPrefab;
+    private ParticleSystem vfxOnDeath;
+    
     private Player player;
     private PlayerData playerData;
     
@@ -32,6 +35,10 @@ public class PlayerManager : MonoBehaviour
     public void SetUp(PlayerData data)
     {
         playerData = data;
+        if (vfxOnDeathPrefab)
+        {
+            vfxOnDeath = Instantiate(vfxOnDeathPrefab);
+        }
         CreatePlayer();
         InputManager.TeleportationKeyPressed += Teleport;
     }
@@ -90,6 +97,12 @@ public class PlayerManager : MonoBehaviour
 
     private void OnPlayerDeath()
     {
+        if (vfxOnDeath)
+        {
+            vfxOnDeath.transform.position = player.transform.position;
+            vfxOnDeath.Play();
+        }
+        
         PlayerDeath?.Invoke();
     }
     

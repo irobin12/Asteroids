@@ -355,6 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a17ac40fed42a3b9cb4bb73617dd6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vfxOnDeathPrefab: {fileID: 5233798816936295017, guid: 4db98962aad054c8aabfa5cf7de1a12a, type: 3}
 --- !u!114 &397348242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0270f0dbe51740fdada7c193f9bd409b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vfxOnDeathPrefab: {fileID: 5233798816936295017, guid: 4db98962aad054c8aabfa5cf7de1a12a, type: 3}
 --- !u!1 &439310510
 GameObject:
   m_ObjectHideFlags: 0

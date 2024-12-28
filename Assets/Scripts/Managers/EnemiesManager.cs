@@ -8,6 +8,9 @@ public class EnemiesManager : MonoBehaviour
 {
     public Action<int> ScoreChanged;
 
+    [SerializeField] private ParticleSystem vfxOnDeathPrefab;
+    private ParticleSystem vfxOnDeath;
+    
     private BigEnemy bigEnemy;
     private SmallEnemy smallEnemy;
     private bool enemyAlive;
@@ -22,6 +25,14 @@ public class EnemiesManager : MonoBehaviour
         Assert.IsTrue(small is SmallEnemy, "The prefab set up in the Small Enemy Data must have a SmallEnemy component attached to it!");
         smallEnemy = small as SmallEnemy;
         smallEnemy.SetPlayerManager(playerManager);
+        
+        if (vfxOnDeathPrefab)
+        {
+            // Hacky assumption that there should be only 1 enemy on screen at any time.
+            // Really there should be a particle systems spawner/manager to handle them across all entities,
+            // But I'm adding this quickly to demonstrate a vertical slice of art polish. 
+            vfxOnDeath = Instantiate(vfxOnDeathPrefab); 
+        }
     }
 
     private Enemy SetUpEnemy(EnemyData data)
@@ -46,6 +57,12 @@ public class EnemiesManager : MonoBehaviour
     
     private void OnEnemyDestroyed(Enemy enemy)
     {
+        if (vfxOnDeath)
+        {
+            vfxOnDeath.transform.position = enemy.transform.position;
+            vfxOnDeath.Play();
+        }
+        
         ScoreChanged?.Invoke(enemy.Data.Score);
         RenewEnemy(enemy);
     }

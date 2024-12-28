@@ -6,8 +6,6 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
 {
     public Action Death;
     
-    [SerializeField] private Animation animationWaitingForRespawn;
-    
     public ProjectileSpawner ProjectileSpawner { get; private set; }
     private MovementManager movementManager;
 
@@ -123,11 +121,5 @@ public class Player : MonoBehaviour, IEntity<PlayerData>, IDestroyable
     private void Fire()
     {
         ProjectileSpawner.SpawnProjectile();
-    }
-
-    public void PrepareForRespawn()
-    {
-        gameObject.SetActive(true);
-        if (animationWaitingForRespawn != null) animationWaitingForRespawn.Play();
     }
 }
